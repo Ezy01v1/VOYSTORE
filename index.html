@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOY STORE — Entretenimiento Premium Honduras</title>
+
+  <!-- ── Google Fonts ── -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet" />
+
+  <!-- ── GSAP (animaciones) ── -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- ── Estilos propios ── -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Cursor personalizado ── -->
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- ── Canvas de partículas de fondo ── -->
+  <canvas id="particle-canvas"></canvas>
+
+
+  <!-- ════════════════════════════════════
+       NAV
+  ════════════════════════════════════ -->
+  <nav id="navbar">
+    <a href="#inicio" class="logo-wrap">
+      <img src="img/logonegrovs.jpeg" alt="VOY STORE" class="navbar-logo">
+      <span class="logo-text">VOY STORE</span>
+    </a>
+
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#app-mockup">App</a></li>
+      <li><a href="#plataformas">Plataformas</a></li>
+      <li><a href="#precios">Precios</a></li>
+      <li><a href="#agentes">Agentes</a></li>
+      <li><a href="#contacto" class="nav-cta">Contáctanos</a></li>
+    </ul>
+
+    <button class="hamburger" id="hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+
+  <!-- ════════════════════════════════════
+       HERO
+  ════════════════════════════════════ -->
+  <section id="inicio">
+    <div class="hero-bg-img"></div>
+    <div class="hero-grain"></div>
+
+    <div class="hero-pill" id="heroPill">
+      <span class="dot"></span>
+      Entretenimiento Premium · Honduras
+    </div>
+
+    <div class="hero-title" id="heroTitle">
+      VOY<br><span class="outline">STO</span><span class="accent">RE</span>
+    </div>
+
+    <p class="hero-sub" id="heroSub">
+      Accede a Netflix, Disney+, HBO Max, Spotify y más al mejor precio.
+      Soporte 24/7, cuentas estables, directo desde Honduras.
+    </p>
+
+    <div class="hero-btns" id="heroBtns">
+      <a href="#precios" class="btn-vivid"> 
+        <img src="img/signodedolar.png" class="btn-icon">
+        Ver Precios</a>
+      <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20informaci%C3%B3n%20sobre%20las%20plataformas%20de%20VOY%20STORE."
+         class="btn-ghost" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#25d366">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+        </svg>
+        WhatsApp
+      </a>
+    </div>
+
+    <!-- Ticker infinito de plataformas -->
+    <div class="ticker-wrap" id="heroTicker">
+      <div class="ticker-track">
+        <span class="ticker-chip">🎬 Netflix</span>
+        <span class="ticker-chip">🏰 Disney+</span>
+        <span class="ticker-chip">🎵 Spotify</span>
+        <span class="ticker-chip">📺 HBO Max</span>
+        <span class="ticker-chip">▶️ YouTube Premium</span>
+        <span class="ticker-chip">🚀 Prime Video</span>
+        <span class="ticker-chip">⭐ Paramount+</span>
+        <span class="ticker-chip">🌟 VIX</span>
+        <span class="ticker-chip">🍥 Crunchyroll</span>
+        <span class="ticker-chip">✅ Cuentas Estables</span>
+        <span class="ticker-chip">💬 Soporte 24/7</span>
+        <!-- duplicado para loop continuo -->
+        <span class="ticker-chip">🎬 Netflix</span>
+        <span class="ticker-chip">🏰 Disney+</span>
+        <span class="ticker-chip">🎵 Spotify</span>
+        <span class="ticker-chip">📺 HBO Max</span>
+        <span class="ticker-chip">▶️ YouTube Premium</span>
+        <span class="ticker-chip">🚀 Prime Video</span>
+        <span class="ticker-chip">⭐ Paramount+</span>
+        <span class="ticker-chip">🌟 VIX</span>
+        <span class="ticker-chip">🍥 Crunchyroll</span>
+        <span class="ticker-chip">✅ Cuentas Estables</span>
+        <span class="ticker-chip">💬 Soporte 24/7</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════
+       STATS STRIP
+  ════════════════════════════════════ -->
+  <div class="stats-strip">
+    <div class="stat-item reveal">
+      <span class="stat-num counter" data-target="10">0</span>
+      <span class="stat-label">Plataformas</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num counter" data-target="500">0</span>
+      <span class="stat-label">Clientes activos</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num">95%</span>
+      <span class="stat-label">Clientes satisfechos</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num counter" data-target="100">0</span>
+      <span class="stat-label">% Estabilidad</span>
+    </div>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       GALERÍA HORIZONTAL
+  ════════════════════════════════════ -->
+  <div class="gallery-strip">
+    <figure data-caption="Streaming">
+      <img src="https://images.unsplash.com/photo-1522869635100-9f4c5e86aa37?w=700&q=70" alt="Streaming" loading="lazy" />
+    </figure>
+    <figure data-caption="Música">
+      <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=700&q=70" alt="Música" loading="lazy" />
+    </figure>
+    <figure data-caption="Entretenimiento">
+      <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=700&q=70" alt="Entretenimiento" loading="lazy" />
+    </figure>
+  </div>
+
+
+  <!-- ════════════════════════════════════
+       APP MOCKUP + FEATURES
+  ════════════════════════════════════ -->
+  <section id="app-mockup">
+
+    <!-- Phone 3D -->
+    <div class="phone-scene reveal left">
+      <div class="phone-glow"></div>
+
+      <!-- Floating badges -->
+      <div class="float-badge fb1">
+        <img src="img/netflix.png" alt="Netflix" class="badge-icon">
+        <span class="badge-val">L.115</span>
+        1 perfil
+      </div>
+      <div class="float-badge fb1">
+        <img src="img/disney plus.png" alt="Disney+" class="badge-icon">
+        <span class="badge-val">L.120</span>
+        1 perfil
+      </div>
+
+      <div class="float-badge fb2">
+        <img src="img/hbo.png" alt="HBO Max" class="badge-icon">
+        <span class="badge-val">L.110</span>
+        1 perfil
+      </div>
+      <div class="float-badge fb3">
+        <img src="img/spotify.png" alt="Spotify" class="badge-icon">
+        <span class="badge-val">L.100</span>
+        1 perfil
+      </div>
+      <div class="float-badge fb4">
+        <img src="img/amazon-prime-video-1.svg" alt="Prime Video" class="badge-icon">
+        <span class="badge-val">L.95</span>
+        1 perfil
+      </div>
+      <div class="float-badge fb5">
+        <img src="img/youtube.png" alt="YouTube Premium" class="badge-icon">
+        <span class="badge-val">L.125</span>
+        1 perfil
+      </div>
+
+      <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-header">
+            <span class="phone-logo-small">VOY STORE</span>
+            <div class="phone-avatar">VS</div>
+          </div>
+          <div class="phone-content">
+            <p class="phone-greeting">Buen día 👋</p>
+            <p class="phone-title-screen">Mis plataformas</p>
+            <div class="phone-search">
+              <span>🔍</span> Buscar plataforma…
+            </div>
+            <p class="phone-section-label">Disponibles</p>
+            <div class="phone-cards">
+              <div class="phone-card">
+                <div class="phone-card-icon" style="background:rgba(229,9,20,.15)"><img src="img/netflix.png" alt="Netflix" class="phone-icon"></div>
+                <div class="phone-card-info">
+                  <div class="phone-card-name">Netflix</div>
+                  <div class="phone-card-type">1 perfil</div>
+                </div>
+                <div class="phone-card-price">L.115</div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-icon" style="background:rgba(17,98,195,.15)"><img src="img/disney plus.png" alt="Disney+" class="phone-icon"></div>
+                <div class="phone-card-info">
+                  <div class="phone-card-name">Disney+</div>
+                  <div class="phone-card-type">1 perfil</div>
+                </div>
+                <div class="phone-card-price">L.120</div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-icon" style="background:rgba(30,215,96,.15)"><img src="img/spotify.png" alt="Spotify" class="phone-icon"></div>
+                <div class="phone-card-info">
+                  <div class="phone-card-name">Spotify</div>
+                  <div class="phone-card-type">1 perfil</div>
+                </div>
+                <div class="phone-card-price">L.100</div>
+              </div>
+              <div class="phone-card">
+                <div class="phone-card-icon" style="background:rgba(0,131,176,.15)"><img src="img/hbo.png" alt="HBO Max" class="phone-icon"></div>
+                <div class="phone-card-info">
+                  <div class="phone-card-name">HBO Max</div>
+                  <div class="phone-card-type">1 perfil</div>
+                </div>
+                <div class="phone-card-price">L.110</div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-bottom-nav">
+            <div class="phone-nav-icon active">🏠<div class="phone-nav-dot"></div></div>
+            <div class="phone-nav-icon">🔍</div>
+            <div class="phone-nav-icon">💰</div>
+            <div class="phone-nav-icon">👤</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features text -->
+    <div class="reveal right">
+      <p class="s-tag">Nueva experiencia</p>
+      <h2 class="s-title">Tu tienda de<br>entretenimiento<br><span style="color:var(--vivid)">digital</span></h2>
+      <p class="s-body">
+        Compra tus plataformas favoritas de forma rápida, segura y con soporte personalizado. Desde Honduras para el mundo.
+      </p>
+      <div class="mockup-features">
+        <div class="mf-item">
+          <div class="mf-icon">✅</div>
+          <div class="mf-text">
+            <h4>Cuentas 100% estables</h4>
+            <p>Garantizamos continuidad en tu servicio sin interrupciones inesperadas.</p>
+          </div>
+        </div>
+        <div class="mf-item">
+          <div class="mf-icon">💬</div>
+          <div class="mf-text">
+            <h4>Atención por WhatsApp</h4>
+            <p>Respuesta rápida y personalizada en todo momento.</p>
+          </div>
+        </div>
+        <div class="mf-item">
+          <div class="mf-icon">💸</div>
+          <div class="mf-text">
+            <h4>Precios competitivos</h4>
+            <p>Opciones por perfil o cuenta completa. Siempre al mejor precio.</p>
+          </div>
+        </div>
+        <div class="mf-item">
+          <div class="mf-icon">🌍</div>
+          <div class="mf-text">
+            <h4>Disponible desde el extranjero</h4>
+            <p>Adquiere tu cuenta aunque estés fuera de Honduras.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════
+       PLATAFORMAS
+  ════════════════════════════════════ -->
+  <section id="plataformas">
+    <p class="s-tag reveal" style="display:block;text-align:center;">Catálogo completo</p>
+    <h2 class="s-title reveal" style="text-align:center;">Plataformas disponibles</h2>
+    <p class="s-body reveal" style="text-align:center;margin:0 auto;">
+      Elige la plataforma que más disfrutas y contáctanos para activarla en minutos.
+    </p>
+
+    <div class="plat-img-grid reveal">
+      <div class="plat-tile plat-tile-wide">
+        <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=900&q=80" alt="Netflix" loading="lazy" />
+        <div class="plat-tile-overlay">
+          <div class="plat-tile-emoji">🎬</div>
+          <div class="plat-tile-name">Netflix</div>
+          <div class="plat-tile-tag">Disponible</div>
+        </div>
+      </div>
+      <div class="plat-tile">
+        <img src="img/disneyplusall.jpeg" alt="Disney+" loading="lazy" />
+        <div class="plat-tile-overlay">
+          <div class="plat-tile-emoji">🏰</div>
+          <div class="plat-tile-name">Disney+</div>
+          <div class="plat-tile-tag">Disponible</div>
+        </div>
+      </div>
+      <div class="plat-tile">
+        <img src="img/spotifyall.jpg" alt="Spotify" loading="lazy" />
+        <div class="plat-tile-overlay">
+          <div class="plat-tile-name">Spotify</div>
+          <div class="plat-tile-tag">Disponible</div>
+        </div>
+      </div>
+      <div class="plat-tile">
+        <img src="img/hboall.jpg" alt="HBO Max" loading="lazy" />
+        <div class="plat-tile-overlay">
+          <div class="plat-tile-name">HBO Max</div>
+          <div class="plat-tile-tag">Disponible</div>
+        </div>
+      </div>
+      <div class="plat-tile">
+        <img src="img/YTALL.jfif" alt="YouTube Premium" loading="lazy" />
+        <div class="plat-tile-overlay">
+          <div class="plat-tile-name">YouTube Premium</div>
+          <div class="plat-tile-tag">Disponible</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="plat-mini-grid reveal">
+      <span class="plat-mini"><img src="img/amazonblanco.png" alt="Prime Video" class="mini-icon"> Prime Video</span>
+      <span class="plat-mini"><img src="img/paramountblanco.png" alt="Paramount+" class="mini-icon"> Paramount+</span>
+      <span class="plat-mini">🌟 VIX</span>
+      <span class="plat-mini"><img src="img/crunchyroll-logo.svg" alt="Crunchyroll" class="mini-icon"> Crunchyroll</span>
+      <span class="plat-mini">+ más</span>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════
+       PRECIOS
+  ════════════════════════════════════ -->
+  <section id="precios">
+    <p class="s-tag reveal" style="display:block;text-align:center;">Lista de precios</p>
+    <h2 class="s-title reveal" style="text-align:center;">Planes accesibles<br>para todos</h2>
+    <p class="pricing-sub reveal">
+      Precios en <strong>Lempiras (L.)</strong>. Perfiles individuales o cuenta completa.
+      Para contratar escríbenos al WhatsApp.
+    </p>
+
+    <div class="pricing-grid reveal">
+      <div class="p-card">
+        <div class="p-card-head"><img src="img/netflix.png" alt="Netflix" class="p-icon"><h3>Netflix</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 115</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 215</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 515</strong></div>
+      </div>
+      <div class="p-card featured">
+        <div class="p-card-head"><img src="img/disney plus.png" alt="Disney+" class="p-icon"><h3>Disney+</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 120</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 225</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 540</strong></div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-head"><img src="img/hbo.png" alt="HBO Max" class="p-icon"><h3>HBO Max</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 110</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 205</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 490</strong></div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-head"><img src="img/amazon-prime-video-1.svg" alt="Prime Video" class="p-icon"><h3>Prime Video</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 95</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 175</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 440</strong></div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-head"><img src="img/spotify.png" alt="Spotify" class="p-icon"><h3>Spotify</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 100</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 190</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 440</strong></div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-head"><img src="img/youtube.png" alt="YouTube Premium" class="p-icon"><h3>YouTube Premium</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 125</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 230</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 555</strong></div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-head"><img src="img/paramount-3.svg" alt="Paramount+" class="p-icon"><h3>Paramount+</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 100</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 180</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 420</strong></div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-head"><span>🌟</span><h3>VIX</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 85</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 155</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 390</strong></div>
+      </div>
+      <div class="p-card">
+        <div class="p-card-head"><img src="img/crunchyroll-logo.svg" alt="Crunchyroll" class="p-icon"><h3>Crunchyroll</h3></div>
+        <div class="p-row"><span>1 Perfil</span><strong>L. 75</strong></div>
+        <div class="p-row"><span>2 Perfiles</span><strong>L. 115</strong></div>
+        <div class="p-row"><span>Cuenta completa</span><strong>L. 315</strong></div>
+      </div>
+    </div>
+
+    <div class="promo-strip reveal">
+      <h4>🏷️ Descuento por múltiples perfiles</h4>
+      <div class="promo-chips">
+        <span class="promo-chip">2 perfiles → L.10 rebaja</span>
+        <span class="promo-chip">3 perfiles → L.30 rebaja</span>
+        <span class="promo-chip">4 perfiles → L.40 rebaja</span>
+        <span class="promo-chip">5 perfiles → L.50 rebaja</span>
+        <span class="promo-chip">6 perfiles → L.70 rebaja</span>
+        <span class="promo-chip">7 perfiles → L.80 rebaja</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════
+       AGENTES DE VENTA
+  ════════════════════════════════════ -->
+  <section id="agentes">
+    <div class="reveal left">
+      <p class="s-tag">Oportunidad de negocio</p>
+      <h2 class="s-title">Únete como<br>agente de ventas</h2>
+      <p class="s-body">
+        ¿Quieres generar ingresos extra? Conviértete en agente de ventas de VOY STORE
+        y gana comisiones distribuyendo plataformas a nivel nacional.
+      </p>
+      <div class="benefit-list">
+        <div class="b-item"><span class="b-dot"></span>Gana comisión por cada venta realizada</div>
+        <div class="b-item"><span class="b-dot"></span>Sin inversión inicial requerida</div>
+        <div class="b-item"><span class="b-dot"></span>Trabaja desde cualquier lugar</div>
+        <div class="b-item"><span class="b-dot"></span>Soporte y capacitación incluidos</div>
+        <div class="b-item"><span class="b-dot"></span>¡Cupos limitados!</div>
+      </div>
+    </div>
+
+    <div class="agents-cta-card reveal right">
+      <div class="agents-emoji">
+        <img src="img/teinteresa.png" alt="">
+      </div>
+      <h3>¿Te interesa?</h3>
+      <p>Escríbenos ahora, cuéntanos sobre ti y te explicamos cómo funciona el programa de agentes.</p>
+      <a href="https://wa.me/50495437730?text=Hola!%20Me%20interesa%20ser%20agente%20de%20ventas%20de%20VOY%20STORE."
+         class="btn-vivid" target="_blank" rel="noopener">
+        💬 Quiero ser agente
+      </a>
+    </div>
+  </section>
+
+
+  <!-- ════════════════════════════════════
+       CONTACTO
+  ════════════════════════════════════ -->
+  <section id="contacto">
+    <div class="contact-bg-img"></div>
+
+    <p class="s-tag reveal" style="display:block;text-align:center;">¿Listo para empezar?</p>
+    <h2 class="s-title reveal" style="text-align:center;">Contáctanos</h2>
+    <p class="s-body reveal" style="text-align:center;margin:0 auto;">
+      Para adquirir cualquier plataforma solo escríbenos. Te atenderemos de forma rápida y segura.
+    </p>
+
+    <div class="c-cards reveal">
+      <div class="c-card">
+        <div class="ci">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="#25d366">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+        </div>
+        <h4>WhatsApp</h4>
+        <a href="https://wa.me/50495437730" target="_blank" rel="noopener">9543-7730</a>
+      </div>
+      <div class="c-card">
+        <div class="ci">🕐</div>
+        <h4>Horario</h4>
+        <span>Lun–Dom 9am – 8pm</span>
+      </div>
+      <div class="c-card">
+        <div class="ci">📍</div>
+        <h4>Cobertura</h4>
+        <span>Honduras · Internacional</span>
+      </div>
+    </div>
+
+    <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20informaci%C3%B3n%20sobre%20las%20plataformas%20de%20VOY%20STORE."
+       class="wa-btn reveal" target="_blank" rel="noopener">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+      </svg>
+      Escribir al WhatsApp
+    </a>
+  </section>
+
+
+  <!-- ════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════ -->
+  <footer>
+    <div class="footer-logo">
+      <img src="img/logonegrovs.jpeg" alt="VOY STORE" class="footer-logo-img">
+      <span class="footer-brand">VOY STORE</span>
+    </div>
+    <div class="footer-socials">
+      <a href="https://www.instagram.com/voystoremas_?igsh=MThyZ2J6NTlkNjcxcA==" target="_blank" rel="noopener" title="Instagram">
+        <img src="img/INSTAGRA.png" class="instagram-logo">
+      </a>
+    </div>
+    <ul class="footer-links">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#plataformas">Plataformas</a></li>
+      <li><a href="#precios">Precios</a></li>
+      <li><a href="#agentes">Agentes</a></li>
+    </ul>
+    <p>© 2025 <strong>VOY STORE</strong>. Honduras. Todos los derechos reservados.</p>
+  </footer>
+
+
+  <!-- ── Script principal (siempre al final del body) ── -->
+  <script src="main.js"></script>
+
+</body>
+</html>
