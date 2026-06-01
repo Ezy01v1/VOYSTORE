@@ -35,8 +35,8 @@
   --muted:       rgba(240, 250, 245, 0.55);
 
   /* Tarjetas */
-  --card-bg:     rgba(255, 255, 255, 0.04);
-  --card-border: rgba(29, 185, 84, 0.18);
+  --card-bg:     rgba(29, 185, 84, 0.15);
+  --card-border: rgba(29, 185, 84, 0.35);
 
   /* Sombras */
   --shadow-green: 0 0 60px rgba(29, 185, 84, 0.25);
@@ -130,15 +130,12 @@ nav.scrolled {
 .logo-wrap {
   display: flex;
   align-items: center;
-  gap: 10px;
   text-decoration: none;
 }
 
 .navbar-logo {
-  width: 40px;
-  height: 40px;
-  object-fit: contain;
-  transition: transform 0.3s ease;
+  height: 60px;  /* o prueba 70px, 80px */
+  width: auto;
 }
 
 .logo-wrap:hover .navbar-logo {
@@ -242,9 +239,9 @@ nav.scrolled {
   inset: 0;
   background:
     linear-gradient(to bottom, rgba(3,17,10,0.7) 0%, rgba(3,17,10,0.4) 40%, rgba(3,17,10,0.85) 100%),
-    url('https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=1600&q=80') center / cover no-repeat;
+    url('img/fondovsverdesinfondo.png') center / cover no-repeat;
   z-index: -1;
-}  
+}
 
 */
 
@@ -337,6 +334,9 @@ nav.scrolled {
 
 .ticker-chip {
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(29, 185, 84, 0.2);
   border-radius: 50px;
@@ -346,6 +346,12 @@ nav.scrolled {
   font-weight: 500;
   white-space: nowrap;
   backdrop-filter: blur(8px);
+}
+
+.ticker-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
 }
 
 
@@ -1062,8 +1068,8 @@ nav.scrolled {
   position: absolute;
   inset: 0;
   z-index: -1;
-  opacity: 0.35;
-  background: url('img/logonegrovs.jpeg') center / 600px no-repeat;
+  opacity: 0.15;
+  background: url('img/fondoblancosinfondo.png') center / 600px no-repeat;
 }
 
 .c-cards {
