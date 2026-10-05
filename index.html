@@ -19,8 +19,62 @@
 
   <!-- ── Estilos propios ── -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- ── Temática de temporada ──
+       Halloween se activa solo del 1 de octubre al 2 de noviembre.
+       Para probar: ?tema=halloween  ·  para apagar: ?tema=normal -->
+  <script>
+    (function () {
+      var root = document.documentElement;
+      var tema = new URLSearchParams(location.search).get('tema');
+      var hoy = new Date(), mes = hoy.getMonth(), dia = hoy.getDate();
+      var temporada = mes === 9 || (mes === 10 && dia <= 2);
+
+      if (tema === 'halloween' || (temporada && tema !== 'normal')) {
+        root.classList.add('theme-halloween');
+        try {
+          if (localStorage.getItem('voystore:hw-banner:' + hoy.getFullYear()) === 'closed') {
+            root.classList.add('hw-banner-closed');
+          }
+        } catch (e) {}
+      }
+    })();
+  </script>
 </head>
 <body>
+
+  <!-- ── Figuras de Halloween (se reutilizan con <use>) ── -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+
+      <!-- Calavera con ojos verdes -->
+      <symbol id="hw-skull" viewBox="0 0 40 44">
+        <path d="M20 2C9 2 3 10 3 19c0 6 3 10 7 12v6c0 2 2 3 3 3h14c1 0 3-1 3-3v-6c4-2 7-6 7-12C37 10 31 2 20 2z" fill="#e9f5ee"/>
+        <ellipse cx="13" cy="20" rx="5" ry="5.5" fill="#03110a"/>
+        <ellipse cx="27" cy="20" rx="5" ry="5.5" fill="#03110a"/>
+        <circle cx="13" cy="20.5" r="1.6" fill="#22e664"/>
+        <circle cx="27" cy="20.5" r="1.6" fill="#22e664"/>
+        <path d="M20 25 L17 30 L23 30 Z" fill="#03110a"/>
+        <path d="M15 34v5M20 34v5M25 34v5" stroke="#03110a" stroke-width="1.5"/>
+      </symbol>
+
+      <!-- Gato negro sentado -->
+      <symbol id="hw-cat" viewBox="0 0 64 90">
+        <path d="M21 15 L13 5 L13.5 20 C10 26 12 33 17 36 C10 48 6 66 8 84 C8 87 10 88 13 88 L42 88 C52 88 60 80 60 68 C60 62 58 58 55 58 C53 58 52 60 54 63 C56 68 54 78 46 80 C45 64 40 46 33 36 C38 33 40 26 36.5 20 L37 5 L29 15 C26.5 14 23.5 14 21 15 Z" fill="#020805"/>
+        <g class="hw-cat-eyes">
+          <ellipse cx="20" cy="24" rx="2.2" ry="2.8" fill="#22e664"/>
+          <ellipse cx="30" cy="24" rx="2.2" ry="2.8" fill="#22e664"/>
+        </g>
+      </symbol>
+
+      <!-- Dulce envuelto (colores por variables CSS) -->
+      <symbol id="hw-candy" viewBox="0 0 48 24">
+        <path d="M16 12 L3 3 L5 12 L3 21 Z M32 12 L45 3 L43 12 L45 21 Z" fill="var(--candy-wrap, #22e664)"/>
+        <circle cx="24" cy="12" r="9" fill="var(--candy-body, #ff8a1f)"/>
+        <path d="M19 5.5 L27 19.5 M23.5 3.2 L31 16.5" stroke="#fff3c4" stroke-width="2" stroke-linecap="round" opacity=".75"/>
+      </symbol>
+    </defs>
+  </svg>
 
   <!-- ── Cursor personalizado ── -->
   <div class="cursor-dot" id="cursorDot"></div>
@@ -30,13 +84,24 @@
   <canvas id="particle-canvas"></canvas>
 
 
+  <!-- ── Banner de Halloween (solo en temporada) ── -->
+  <div class="hw-banner hw-only" id="hwBanner" role="region" aria-label="Temporada de Halloween">
+    <span class="hw-banner-text">
+      <img src="img/calabaza-sm.png" alt="" class="hw-icon"> <strong>Temporada de terror</strong>
+      <span class="hw-long">· Maratonea tus pelis de miedo en Netflix, HBO Max y Prime Video</span>
+      <a href="#precios">Ver precios →</a>
+    </span>
+    <button type="button" class="hw-banner-close" id="hwBannerClose" aria-label="Cerrar aviso">×</button>
+  </div>
+
+
   <!-- ════════════════════════════════════
        NAV
   ════════════════════════════════════ -->
   <nav id="navbar">
     <a href="#inicio" class="logo-wrap">
       <img src="img/fondoblancosinfondo.png" alt="VOY STORE" class="navbar-logo">
-    
+    </a>
 
     <ul class="nav-links" id="navLinks">
       <li><a href="#inicio">Inicio</a></li>
@@ -47,7 +112,7 @@
       <li><a href="#contacto" class="nav-cta">Contáctanos</a></li>
     </ul>
 
-    <button class="hamburger" id="hamburger" aria-label="Menú">
+    <button class="hamburger" id="hamburger" aria-label="Menú" aria-expanded="false" aria-controls="navLinks">
       <span></span><span></span><span></span>
     </button>
   </nav>
@@ -60,9 +125,36 @@
     <div class="hero-bg-img"></div>
     <div class="hero-grain"></div>
 
+    <!-- Campo de calabazas de fondo (Halloween) -->
+    <div class="hw-field hw-only" aria-hidden="true"></div>
+
+    <!-- Luna llena con gato negro (Halloween) -->
+    <div class="hw-moon hw-only" aria-hidden="true">
+      <svg class="hw-cat"><use href="#hw-cat"/></svg>
+    </div>
+
+    <!-- Calabazas, calavera y dulces sobre el "suelo" del hero -->
+    <div class="hw-ground hw-ground-left hw-only" aria-hidden="true">
+      <img src="img/calabaza-sm.png" alt="" class="hw-pumpkin hw-pumpkin-lg">
+      <svg class="hw-skull"><use href="#hw-skull"/></svg>
+      <img src="img/calabaza-sm.png" alt="" class="hw-pumpkin hw-pumpkin-sm">
+      <svg class="hw-candy"><use href="#hw-candy"/></svg>
+    </div>
+
+    <div class="hw-ground hw-ground-right hw-only" aria-hidden="true">
+      <svg class="hw-candy hw-candy-alt"><use href="#hw-candy"/></svg>
+      <img src="img/calabaza-sm.png" alt="" class="hw-pumpkin">
+    </div>
+
+    <!-- Araña colgante (Halloween) -->
+    <div class="hw-spider hw-only" aria-hidden="true">
+      <span class="hw-thread"></span>
+      <span class="hw-spider-body">🕷️</span>
+    </div>
+
     <div class="hero-pill" id="heroPill">
       <span class="dot"></span>
-      Entretenimiento Premium · Honduras
+      <span data-hw="Edición Halloween · Honduras" data-hw-icon>Entretenimiento Premium · Honduras</span>
     </div>
 
     <div class="hero-title" id="heroTitle">
@@ -100,6 +192,7 @@
         <span class="ticker-chip"><img src="img/ViX_Logo.svg.png" alt="VIX" class="ticker-icon"> VIX</span>
         <span class="ticker-chip"><img src="img/Crunchyroll_LogoSINFONDO.png" alt="Crunchyroll" class="ticker-icon"> Crunchyroll</span>
         <span class="ticker-chip">✅ Cuentas Estables</span>
+        <span class="ticker-chip ticker-chip-hw hw-only"><img src="img/calabaza-sm.png" alt="" class="ticker-icon"> Temporada de terror</span>
         <!-- duplicado para loop continuo -->
         <span class="ticker-chip"><img src="img/netflix.png" alt="Netflix" class="ticker-icon"> Netflix</span>
         <span class="ticker-chip"><img src="img/disney-plusblanco.png" alt="Disney+" class="ticker-icon"> Disney+</span>
@@ -111,6 +204,7 @@
         <span class="ticker-chip"><img src="img/ViX_Logo.svg.png" alt="VIX" class="ticker-icon"> VIX</span>
         <span class="ticker-chip"><img src="img/Crunchyroll_LogoSINFONDO.png" alt="Crunchyroll" class="ticker-icon"> Crunchyroll</span>
         <span class="ticker-chip">✅ Cuentas Estables</span>
+        <span class="ticker-chip ticker-chip-hw hw-only"><img src="img/calabaza-sm.png" alt="" class="ticker-icon"> Temporada de terror</span>
       </div>
     </div>
   </section>
@@ -170,7 +264,7 @@
         <span class="badge-val">L.115</span>
         1 perfil
       </div>
-      <div class="float-badge fb1">
+      <div class="float-badge fb6">
         <img src="img/disney-plusblanco.png" alt="Disney+" class="badge-icon">
         <span class="badge-val">L.120</span>
         1 perfil
@@ -200,19 +294,24 @@
       <div class="phone-frame">
         <div class="phone-notch"></div>
         <div class="phone-screen">
+          <div class="phone-toast" id="phoneToast" aria-hidden="true">
+            <span class="phone-toast-icon">✓</span>
+            <span class="phone-toast-text"><strong id="phoneToastName">Netflix</strong> activado<br><small data-hw="Listo para tu maratón de terror 🦇">Acceso enviado por WhatsApp</small></span>
+          </div>
           <div class="phone-header">
             <span class="phone-logo-small">VOY STORE</span>
-            <div class="phone-avatar">VS</div>
+            <div class="phone-avatar" data-hw-img="img/calabaza-naranja.webp">VS</div>
           </div>
           <div class="phone-content">
-            <p class="phone-greeting">Buen día 👋</p>
+            <p class="phone-greeting" id="phoneGreeting">Buen día 👋</p>
             <p class="phone-title-screen">Mis plataformas</p>
             <div class="phone-search">
-              <span>🔍</span> Buscar plataforma…
+              <span>🔍</span>
+              <span class="phone-search-text" id="phoneSearchText">Buscar plataforma…</span>
             </div>
             <p class="phone-section-label">Disponibles</p>
             <div class="phone-cards">
-              <div class="phone-card">
+              <div class="phone-card" data-plan="netflix" data-name="Netflix" role="button" tabindex="0" aria-label="Ver precios de Netflix">
                 <div class="phone-card-icon" style="background:rgba(229,9,20,.15)"><img src="img/netflix.png" alt="Netflix" class="phone-icon"></div>
                 <div class="phone-card-info">
                   <div class="phone-card-name">Netflix</div>
@@ -220,7 +319,7 @@
                 </div>
                 <div class="phone-card-price">L.115</div>
               </div>
-              <div class="phone-card">
+              <div class="phone-card" data-plan="disney" data-name="Disney+" role="button" tabindex="0" aria-label="Ver precios de Disney+">
                 <div class="phone-card-icon" style="background:rgba(17,98,195,.15)"><img src="img/disney plus.png" alt="Disney+" class="phone-icon"></div>
                 <div class="phone-card-info">
                   <div class="phone-card-name">Disney+</div>
@@ -228,7 +327,7 @@
                 </div>
                 <div class="phone-card-price">L.120</div>
               </div>
-              <div class="phone-card">
+              <div class="phone-card" data-plan="spotify" data-name="Spotify" role="button" tabindex="0" aria-label="Ver precios de Spotify">
                 <div class="phone-card-icon" style="background:rgba(30,215,96,.15)"><img src="img/spotify.png" alt="Spotify" class="phone-icon"></div>
                 <div class="phone-card-info">
                   <div class="phone-card-name">Spotify</div>
@@ -236,7 +335,7 @@
                 </div>
                 <div class="phone-card-price">L.100</div>
               </div>
-              <div class="phone-card">
+              <div class="phone-card" data-plan="hbo" data-name="HBO Max" role="button" tabindex="0" aria-label="Ver precios de HBO Max">
                 <div class="phone-card-icon" style="background:rgba(0,131,176,.15)"><img src="img/hbo.png" alt="HBO Max" class="phone-icon"></div>
                 <div class="phone-card-info">
                   <div class="phone-card-name">HBO Max</div>
@@ -307,8 +406,8 @@
       Elige la plataforma que más disfrutas y contáctanos para activarla en minutos.
     </p>
 
-    <div class="plat-img-grid reveal">
-      <div class="plat-tile plat-tile-wide">
+    <div class="plat-img-grid">
+      <div class="plat-tile plat-tile-wide" data-plan="netflix" role="button" tabindex="0" aria-label="Ver precios de Netflix">
         <img src="https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?w=900&q=80" alt="Netflix" loading="lazy" />
         <div class="plat-tile-overlay">
           <div class="plat-tile-emoji">🎬</div>
@@ -316,7 +415,7 @@
           <div class="plat-tile-tag">Disponible</div>
         </div>
       </div>
-      <div class="plat-tile">
+      <div class="plat-tile" data-plan="disney" role="button" tabindex="0" aria-label="Ver precios de Disney+">
         <img src="img/disneyplusall.jpeg" alt="Disney+" loading="lazy" />
         <div class="plat-tile-overlay">
           <div class="plat-tile-emoji"></div>
@@ -324,21 +423,21 @@
           <div class="plat-tile-tag">Disponible</div>
         </div>
       </div>
-      <div class="plat-tile">
+      <div class="plat-tile" data-plan="spotify" role="button" tabindex="0" aria-label="Ver precios de Spotify">
         <img src="img/spotifyall.jpg" alt="Spotify" loading="lazy" />
         <div class="plat-tile-overlay">
           <div class="plat-tile-name">Spotify</div>
           <div class="plat-tile-tag">Disponible</div>
         </div>
       </div>
-      <div class="plat-tile">
+      <div class="plat-tile" data-plan="hbo" role="button" tabindex="0" aria-label="Ver precios de HBO Max">
         <img src="img/hbomaxall.png" alt="HBO Max" loading="lazy" />
         <div class="plat-tile-overlay">
           <div class="plat-tile-name">HBO Max</div>
           <div class="plat-tile-tag">Disponible</div>
         </div>
       </div>
-      <div class="plat-tile">
+      <div class="plat-tile" data-plan="youtube" role="button" tabindex="0" aria-label="Ver precios de YouTube Premium">
         <img src="img/YTALL.jfif" alt="YouTube Premium" loading="lazy" />
         <div class="plat-tile-overlay">
           <div class="plat-tile-name">YouTube Premium</div>
@@ -348,10 +447,10 @@
     </div>
 
     <div class="plat-mini-grid reveal">
-      <span class="plat-mini"><img src="img/amazonblanco.png" alt="Prime Video" class="mini-icon"> Prime Video</span>
-      <span class="plat-mini"><img src="img/paramountblanco.png" alt="Paramount+" class="mini-icon"> Paramount+</span>
-      <span class="plat-mini"><img src="img/ViX_Logo.svg.png" alt="VIX" class="mini-icon"> VIX</span>
-      <span class="plat-mini"><img src="img/Crunchyroll_LogoSINFONDO.png" alt="Crunchyroll" class="mini-icon"> Crunchyroll</span>
+      <span class="plat-mini" data-plan="prime" role="button" tabindex="0" aria-label="Ver precios de Prime Video"><img src="img/amazonblanco.png" alt="Prime Video" class="mini-icon"> Prime Video</span>
+      <span class="plat-mini" data-plan="paramount" role="button" tabindex="0" aria-label="Ver precios de Paramount+"><img src="img/paramountblanco.png" alt="Paramount+" class="mini-icon"> Paramount+</span>
+      <span class="plat-mini" data-plan="vix" role="button" tabindex="0" aria-label="Ver precios de VIX"><img src="img/ViX_Logo.svg.png" alt="VIX" class="mini-icon"> VIX</span>
+      <span class="plat-mini" data-plan="crunchyroll" role="button" tabindex="0" aria-label="Ver precios de Crunchyroll"><img src="img/Crunchyroll_LogoSINFONDO.png" alt="Crunchyroll" class="mini-icon"> Crunchyroll</span>
       <span class="plat-mini">+ más</span>
     </div>
   </section>
@@ -368,82 +467,107 @@
       Para contratar escríbenos al WhatsApp.
     </p>
 
-    <div class="pricing-grid reveal">
-      <div class="p-card">
+    <div class="pricing-grid">
+      <div class="p-card" id="plan-netflix">
         <div class="p-card-head"><img src="img/netflix.png" alt="Netflix" class="p-icon"><h3>Netflix</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 115</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 215</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 515</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20Netflix" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar Netflix</a>
       </div>
-      <div class="p-card featured">
+      <div class="p-card featured" id="plan-disney">
+        <span class="p-badge" data-hw="Destacado" data-hw-icon>Destacado</span>
         <div class="p-card-head"><img src="img/disney-plusblanco.png" alt="Disney+" class="p-icon"><h3>Disney+</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 120</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 225</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 540</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20Disney%2B" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar Disney+</a>
       </div>
-      <div class="p-card">
+      <div class="p-card" id="plan-hbo">
         <div class="p-card-head"><img src="img/hbo.png" alt="HBO Max" class="p-icon"><h3>HBO Max</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 110</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 205</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 490</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20HBO%20Max" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar HBO Max</a>
       </div>
-      <div class="p-card">
+      <div class="p-card" id="plan-prime">
         <div class="p-card-head"><img src="img/amazonblanco.png" alt="Prime Video" class="p-icon"><h3>Prime Video</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 95</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 175</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 440</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20Prime%20Video" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar Prime Video</a>
       </div>
-      <div class="p-card">
+      <div class="p-card" id="plan-spotify">
         <div class="p-card-head"><img src="img/spotify.png" alt="Spotify" class="p-icon"><h3>Spotify</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 100</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 190</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 440</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20Spotify" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar Spotify</a>
       </div>
-      <div class="p-card">
+      <div class="p-card" id="plan-youtube">
         <div class="p-card-head"><img src="img/youtube.png" alt="YouTube Premium" class="p-icon"><h3>YouTube Premium</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 125</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 230</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 555</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20YouTube%20Premium" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar YouTube Premium</a>
       </div>
-      <div class="p-card">
+      <div class="p-card" id="plan-paramount">
         <div class="p-card-head"><img src="img/paramountblanco.png" alt="Paramount+" class="p-icon"><h3>Paramount+</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 100</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 180</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 420</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20Paramount%2B" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar Paramount+</a>
       </div>
-      <div class="p-card">
+      <div class="p-card" id="plan-vix">
         <div class="p-card-head"><img src="img/ViX_Logo.svg.png" alt="VIX" class="p-icon"><h3>VIX</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 85</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 155</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 390</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20VIX" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar VIX</a>
       </div>
-      <div class="p-card">
+      <div class="p-card" id="plan-crunchyroll">
         <div class="p-card-head"><img src="img/Crunchyroll_LogoSINFONDO.png" alt="Crunchyroll" class="p-icon"><h3>Crunchyroll</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 75</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 115</strong></div>
         <div class="p-row"><span>Cuenta completa</span><strong>L. 315</strong></div>
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20Crunchyroll" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar Crunchyroll</a>
       </div>
+
     </div>
 
-    <div class="promo-strip reveal">
-      <h4>🏷️ Descuento por múltiples perfiles</h4>
-      <div class="promo-chips">
-        <span class="promo-chip">2 perfiles → L.10 rebaja</span>
-        <span class="promo-chip">3 perfiles → L.30 rebaja</span>
-        <span class="promo-chip">4 perfiles → L.40 rebaja</span>
-        <span class="promo-chip">5 perfiles → L.50 rebaja</span>
-        <span class="promo-chip">6 perfiles → L.70 rebaja</span>
-        <span class="promo-chip">7 perfiles → L.80 rebaja</span>
+    <div class="combo promo-strip reveal" id="combo">
+      <img src="img/calabaza-sm.png" alt="" class="hw-pumpkin hw-combo-pumpkin hw-only" aria-hidden="true">
+      <h4 data-hw="Arma tu combo del terror" data-hw-icon>🧩 Arma tu combo y ahorra</h4>
+      <p class="combo-sub">Elige tus plataformas (1 perfil c/u). El descuento por múltiples perfiles se aplica solo.</p>
+
+      <div class="combo-chips" id="comboChips">
+        <button type="button" class="combo-chip" data-combo="netflix" data-name="Netflix" data-price="115" aria-pressed="false"><img src="img/netflix.png" alt="" class="mini-icon"> Netflix <span class="combo-chip-price">L.115</span></button>
+        <button type="button" class="combo-chip" data-combo="disney" data-name="Disney+" data-price="120" aria-pressed="false"><img src="img/disney-plusblanco.png" alt="" class="mini-icon"> Disney+ <span class="combo-chip-price">L.120</span></button>
+        <button type="button" class="combo-chip" data-combo="hbo" data-name="HBO Max" data-price="110" aria-pressed="false"><img src="img/hbo.png" alt="" class="mini-icon"> HBO Max <span class="combo-chip-price">L.110</span></button>
+        <button type="button" class="combo-chip" data-combo="prime" data-name="Prime Video" data-price="95" aria-pressed="false"><img src="img/amazonblanco.png" alt="" class="mini-icon"> Prime Video <span class="combo-chip-price">L.95</span></button>
+        <button type="button" class="combo-chip" data-combo="spotify" data-name="Spotify" data-price="100" aria-pressed="false"><img src="img/spotify.png" alt="" class="mini-icon"> Spotify <span class="combo-chip-price">L.100</span></button>
+        <button type="button" class="combo-chip" data-combo="youtube" data-name="YouTube Premium" data-price="125" aria-pressed="false"><img src="img/youtube.png" alt="" class="mini-icon"> YouTube Premium <span class="combo-chip-price">L.125</span></button>
+        <button type="button" class="combo-chip" data-combo="paramount" data-name="Paramount+" data-price="100" aria-pressed="false"><img src="img/paramountblanco.png" alt="" class="mini-icon"> Paramount+ <span class="combo-chip-price">L.100</span></button>
+        <button type="button" class="combo-chip" data-combo="vix" data-name="VIX" data-price="85" aria-pressed="false"><img src="img/ViX_Logo.svg.png" alt="" class="mini-icon"> VIX <span class="combo-chip-price">L.85</span></button>
+        <button type="button" class="combo-chip" data-combo="crunchyroll" data-name="Crunchyroll" data-price="75" aria-pressed="false"><img src="img/Crunchyroll_LogoSINFONDO.png" alt="" class="mini-icon"> Crunchyroll <span class="combo-chip-price">L.75</span></button>
       </div>
+
+      <div class="promo-chips" id="promoTiers">
+        <span class="promo-chip" data-count="2">2 perfiles → L.10 rebaja</span>
+        <span class="promo-chip" data-count="3">3 perfiles → L.30 rebaja</span>
+        <span class="promo-chip" data-count="4">4 perfiles → L.40 rebaja</span>
+        <span class="promo-chip" data-count="5">5 perfiles → L.50 rebaja</span>
+        <span class="promo-chip" data-count="6">6 perfiles → L.70 rebaja</span>
+        <span class="promo-chip" data-count="7">7+ perfiles → L.80 rebaja</span>
+      </div>
+
+      <div class="combo-summary" aria-live="polite">
+        <div class="combo-line"><span>Subtotal</span><span id="comboSubtotal">L. 0</span></div>
+        <div class="combo-line combo-save"><span>Descuento</span><span id="comboDiscount">– L. 0</span></div>
+        <div class="combo-total"><span>Total</span><strong id="comboTotal">L. 0</strong></div>
+      </div>
+
+      <a id="comboBtn" class="p-btn combo-btn is-disabled" aria-disabled="true" href="https://wa.me/50495437730" target="_blank" rel="noopener">Elige al menos una plataforma</a>
     </div>
   </section>
 
@@ -487,6 +611,12 @@
   ════════════════════════════════════ -->
   <section id="contacto">
     <div class="contact-bg-img"></div>
+
+    <div class="hw-contact-deco hw-only" aria-hidden="true">
+      <svg class="hw-candy"><use href="#hw-candy"/></svg>
+      <img src="img/calabaza-sm.png" alt="" class="hw-pumpkin">
+      <svg class="hw-candy hw-candy-alt"><use href="#hw-candy"/></svg>
+    </div>
 
     <p class="s-tag reveal" style="display:block;text-align:center;">¿Listo para empezar?</p>
     <h2 class="s-title reveal" style="text-align:center;">Contáctanos</h2>
@@ -533,6 +663,7 @@
     <div class="footer-logo">
       <img src="img/fondoblancosinfondo.png" alt="VOY STORE" class="footer-logo-img">
       <span class="footer-brand">VOY STORE</span>
+      <svg class="hw-skull hw-footer-skull hw-only" aria-hidden="true"><use href="#hw-skull"/></svg>
     </div>
     <div class="footer-socials">
       <a href="https://www.instagram.com/voystoremas_?igsh=MThyZ2J6NTlkNjcxcA==" target="_blank" rel="noopener" title="Instagram">
@@ -548,6 +679,12 @@
     <p>© 2025 <strong>VOY STORE</strong>. Honduras. Todos los derechos reservados.</p>
   </footer>
 
+
+  <!-- ── Botón flotante de WhatsApp ── -->
+  <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20informaci%C3%B3n%20sobre%20las%20plataformas%20de%20VOY%20STORE."
+     class="wa-float" id="waFloat" target="_blank" rel="noopener" aria-label="Escríbenos por WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
 
   <!-- ── Script principal (siempre al final del body) ── -->
   <script src="main.js"></script>
