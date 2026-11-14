@@ -1,0 +1,458 @@
+/* ============================================================
+   VOY STORE — Temática de Navidad
+   Se activa con la clase .theme-navidad en <html>
+   (ver script en el <head> de index.html).
+   Paleta: verde noche de la marca + dorado + rojo + crema.
+   Todo lo que está aquí solo aplica en temporada.
+============================================================ */
+
+:root {
+  --xm-gold:   #f2c46d;
+  --xm-gold2:  #ffdf9e;
+  --xm-red:    #d7263d;
+  --xm-red2:   #a3182b;
+  --xm-cream:  #f3ead8;
+  --xm-pine:   #0f3d24;
+  --xm-night:  #1b2140;
+}
+
+html:not(.theme-navidad) .xm-only { display: none !important; }
+
+html.theme-navidad:not(.xm-banner-closed) { --hw-offset: 36px; }
+
+
+/* ──────────────────────────────────────────
+   1. INTRO: PUERTA NAVIDEÑA
+────────────────────────────────────────── */
+.xm-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: none;
+  perspective: 1800px;
+  background: radial-gradient(ellipse at center, #2a1d08 0%, #0b0a05 70%);
+  overflow: hidden;
+}
+
+html.xm-intro-on .xm-intro { display: block; }
+html.xm-intro-on body { overflow: hidden; }
+
+/* Resplandor dorado que sale de la rendija */
+.xm-intro-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 30% 60% at 50% 50%, rgba(255, 223, 158, 0.9), rgba(242, 196, 109, 0.35) 45%, transparent 75%);
+  opacity: 0;
+  transform: scaleX(0.05);
+}
+
+.xm-door {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50.2%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.10) 0 2px, transparent 2px 46px),
+    linear-gradient(180deg, #13502f 0%, var(--xm-pine) 55%, #0a2c19 100%);
+  box-shadow: inset 0 0 0 10px #0a2c19, inset 0 0 0 13px var(--xm-gold);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+.xm-door-left  { left: 0;  transform-origin: left center; }
+.xm-door-right { right: 0; transform-origin: right center; }
+
+/* Paneles en relieve */
+.xm-door::before,
+.xm-door::after {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  border: 2px solid rgba(242, 196, 109, 0.45);
+  border-radius: 6px;
+  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.35);
+}
+.xm-door::before { top: 8%;  height: 34%; }
+.xm-door::after  { bottom: 8%; height: 40%; }
+
+/* Manija */
+.xm-knob {
+  position: absolute;
+  top: 54%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--xm-gold2), #a87b2a);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+.xm-door-left  .xm-knob { right: 6%; }
+.xm-door-right .xm-knob { left: 6%; }
+
+/* Corona + logo en el centro, encima de las dos hojas */
+.xm-intro-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(62vw, 320px);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+}
+
+.xm-intro-center .xm-wreath {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.6));
+}
+
+.xm-intro-logo {
+  position: relative;
+  width: 74%;
+  height: auto;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.7));
+}
+
+.xm-intro-skip {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 3;
+  padding: 8px 18px;
+  border: 1px solid rgba(242, 196, 109, 0.5);
+  border-radius: 50px;
+  background: rgba(0, 0, 0, 0.35);
+  color: var(--xm-cream);
+  font: 600 0.78rem 'DM Sans', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 150ms var(--ease-out);
+}
+.xm-intro-skip:hover { background: rgba(242, 196, 109, 0.18); }
+
+/* Secuencia de apertura (la clase la pone navidad.js) */
+.xm-intro.is-opening .xm-door-left  { animation: xmDoorL 1100ms var(--ease-in-out) forwards; }
+.xm-intro.is-opening .xm-door-right { animation: xmDoorR 1100ms var(--ease-in-out) forwards; }
+.xm-intro.is-opening .xm-intro-center { animation: xmCenterOut 600ms var(--ease-out) forwards; }
+.xm-intro.is-opening .xm-intro-glow { animation: xmGlow 1100ms var(--ease-out) forwards; }
+.xm-intro.is-leaving { animation: xmFadeOut 400ms ease forwards; }
+
+@keyframes xmDoorL { to { transform: rotateY(-108deg); } }
+@keyframes xmDoorR { to { transform: rotateY(108deg); } }
+@keyframes xmCenterOut { to { opacity: 0; transform: translate(-50%, -50%) scale(1.25); } }
+@keyframes xmGlow {
+  30%  { opacity: 1; }
+  100% { opacity: 0.85; transform: scaleX(2.2); }
+}
+@keyframes xmFadeOut { to { opacity: 0; visibility: hidden; } }
+
+.xm-intro-center { animation: xmCenterIn 700ms var(--ease-out) both; }
+@keyframes xmCenterIn {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.85); }
+}
+
+
+/* ──────────────────────────────────────────
+   2. BANNER SUPERIOR
+────────────────────────────────────────── */
+.xm-banner {
+  background: linear-gradient(90deg, var(--g1) 0%, #2a1d08 50%, var(--g1) 100%);
+  border-bottom-color: rgba(242, 196, 109, 0.4);
+}
+.xm-banner strong { color: var(--xm-gold); }
+.xm-banner-closed .xm-banner { display: none; }
+
+
+/* ──────────────────────────────────────────
+   3. LOGO CON GUIRNALDA
+────────────────────────────────────────── */
+.theme-navidad .logo-wrap { position: relative; }
+
+.xm-garland {
+  position: absolute;
+  left: -8%;
+  top: -4px;
+  width: 116%;
+  height: 34px;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.xm-light { animation: xmTwinkle 1.6s ease-in-out infinite; }
+.xm-light:nth-of-type(2n) { animation-delay: 0.5s; }
+.xm-light:nth-of-type(3n) { animation-delay: 1s; }
+
+@keyframes xmTwinkle {
+  50% { opacity: 0.25; }
+}
+
+.xm-ornament {
+  transform-box: fill-box;
+  transform-origin: 50% 0%;
+  animation: xmSwing 3.2s ease-in-out infinite;
+}
+.xm-ornament-b { animation-delay: -1.6s; }
+
+@keyframes xmSwing {
+  0%, 100% { transform: rotate(6deg); }
+  50%      { transform: rotate(-6deg); }
+}
+
+
+/* ──────────────────────────────────────────
+   4. HERO
+────────────────────────────────────────── */
+.theme-navidad .hero-pill {
+  color: var(--xm-gold);
+  border-color: rgba(242, 196, 109, 0.4);
+  background: rgba(242, 196, 109, 0.08);
+}
+.theme-navidad .hero-pill .dot { background: var(--xm-red); }
+.theme-navidad .s-tag { color: var(--xm-gold); }
+
+.theme-navidad .hero-title .accent {
+  color: var(--xm-gold);
+  text-shadow: 0 0 40px rgba(242, 196, 109, 0.35);
+}
+
+/* "NAVIDAD" gigante detrás del título */
+.xm-bigword {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -62%);
+  z-index: -1;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(7rem, 30vw, 26rem);
+  line-height: 1;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(242, 196, 109, 0.14);
+  background: linear-gradient(180deg, rgba(242, 196, 109, 0.10), transparent 80%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Hilo de luces en la parte superior del hero */
+.xm-lights {
+  position: absolute;
+  top: calc(72px + var(--hw-offset));
+  left: 0;
+  width: 100%;
+  height: 48px;
+  pointer-events: none;
+}
+
+.xm-bulb {
+  position: absolute;
+  width: 8px;
+  height: 12px;
+  margin: 0 0 0 -4px;
+  border-radius: 50% 50% 50% 50% / 40% 40% 60% 60%;
+  background: var(--c);
+  box-shadow: 0 0 10px 2px var(--c);
+}
+.xm-bulb::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: #3b3b3b;
+}
+
+/* Cuenta regresiva */
+.xm-countdown {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 34px;
+  padding: 10px 22px 10px 12px;
+  border: 1px solid rgba(242, 196, 109, 0.35);
+  border-radius: 50px;
+  background: rgba(242, 196, 109, 0.06);
+  backdrop-filter: blur(8px);
+}
+
+.xm-countdown-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.2rem;
+  line-height: 1;
+  min-width: 2ch;
+  padding: 6px 12px 2px;
+  border-radius: 40px;
+  background: var(--xm-gold);
+  color: #1d1405;
+  font-variant-numeric: tabular-nums;
+}
+
+.xm-countdown-text {
+  text-align: left;
+  font-size: 0.85rem;
+  line-height: 1.35;
+  color: var(--white);
+}
+.xm-countdown-text small { color: var(--muted); }
+
+
+/* ──────────────────────────────────────────
+   5. FRANJA GEOMÉTRICA (íconos navideños)
+────────────────────────────────────────── */
+.xm-pattern {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  overflow: hidden;
+  height: 96px;
+}
+
+.xm-pattern .xm-tile {
+  flex: 0 0 96px;
+  height: 96px;
+}
+
+.xm-pattern .xm-tile svg { display: block; width: 100%; height: 100%; }
+
+.xm-pattern-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 60s linear infinite;
+}
+
+
+/* ──────────────────────────────────────────
+   6. PRECIOS COMO ESTAMPILLAS
+────────────────────────────────────────── */
+.theme-navidad .pricing-grid > .p-card {
+  border: 10px solid var(--xm-cream);
+  border-radius: 0;
+  background:
+    radial-gradient(circle at 85% 0%, rgba(242, 196, 109, 0.12), transparent 50%),
+    linear-gradient(160deg, #10351f, #071c10);
+  padding: 24px 20px 22px;
+  -webkit-mask:
+    conic-gradient(#000 0 0) padding-box,
+    radial-gradient(farthest-side, #0000 96%, #000) 0 0 / 16px 16px round border-box;
+          mask:
+    conic-gradient(#000 0 0) padding-box,
+    radial-gradient(farthest-side, #0000 96%, #000) 0 0 / 16px 16px round border-box;
+}
+
+.theme-navidad .pricing-grid > .p-card::before { display: none; }
+
+.theme-navidad .pricing-grid > .p-card:hover {
+  transform: translateY(-6px) rotate(-0.6deg);
+}
+
+.theme-navidad .p-row { border-bottom-color: rgba(242, 196, 109, 0.12); }
+.theme-navidad .p-row strong { color: var(--xm-gold); }
+
+.theme-navidad .p-badge {
+  left: 14px;
+  right: auto;
+  top: 12px;
+  background: var(--xm-red);
+  color: #fff;
+}
+
+.theme-navidad .p-card.featured { padding-top: 44px; }
+
+.theme-navidad .p-card.featured {
+  border-color: var(--xm-gold2);
+  background:
+    radial-gradient(circle at 85% 0%, rgba(215, 38, 61, 0.22), transparent 55%),
+    linear-gradient(160deg, #10351f, #071c10);
+}
+
+/* Moño sobre la estampilla destacada */
+.xm-bow {
+  position: absolute;
+  top: 4px;
+  right: 6px;
+  width: 56px;
+  height: 32px;
+  pointer-events: none;
+}
+
+.theme-navidad .combo {
+  border-color: rgba(242, 196, 109, 0.3);
+}
+
+
+/* ──────────────────────────────────────────
+   7. CONTACTO: MONTAÑAS NEVADAS
+────────────────────────────────────────── */
+.theme-navidad #contacto {
+  overflow: hidden;
+  padding-bottom: clamp(200px, 26vw, 300px);
+}
+
+.xm-mountains {
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: min(820px, 130%);
+  transform: translateX(-50%);
+  z-index: 0;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.theme-navidad #contacto > :not(.xm-mountains):not(.contact-bg-img) {
+  position: relative;
+  z-index: 1;
+}
+
+.xm-star-glow { animation: xmPulse 3s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes xmPulse { 50% { transform: scale(1.18); opacity: 0.7; } }
+
+
+/* ──────────────────────────────────────────
+   8. ACENTOS GENERALES
+────────────────────────────────────────── */
+.theme-navidad .wa-float { box-shadow: 0 0 0 3px rgba(242, 196, 109, 0.5), 0 10px 30px rgba(0, 0, 0, 0.4); }
+.theme-navidad .phone-avatar { background: var(--xm-red); }
+
+
+/* ──────────────────────────────────────────
+   9. MÓVIL
+────────────────────────────────────────── */
+@media (max-width: 680px) {
+  .xm-banner .hw-long { display: none; }
+  .xm-countdown { margin-top: 26px; padding-right: 16px; }
+  .xm-countdown-num { font-size: 1.8rem; }
+  .xm-pattern, .xm-pattern .xm-tile { height: 64px; }
+  .xm-pattern .xm-tile { flex-basis: 64px; }
+  .xm-lights { height: 34px; }
+}
+
+
+/* ──────────────────────────────────────────
+   10. MOVIMIENTO REDUCIDO
+────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .xm-light,
+  .xm-ornament,
+  .xm-star-glow,
+  .xm-pattern-track,
+  .xm-intro-center {
+    animation: none !important;
+  }
+  .xm-intro.is-opening .xm-door-left,
+  .xm-intro.is-opening .xm-door-right,
+  .xm-intro.is-opening .xm-intro-center,
+  .xm-intro.is-opening .xm-intro-glow {
+    animation: none;
+  }
+  .theme-navidad .pricing-grid > .p-card:hover { transform: none; }
+}

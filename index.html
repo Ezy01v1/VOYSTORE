@@ -20,11 +20,13 @@
   <!-- ── Estilos propios ──
        Al cambiar style.css o main.js, actualiza el ?v= (aquí y abajo)
        para que los navegadores no usen la versión en caché. -->
-  <link rel="stylesheet" href="style.css?v=2026-10-04b" />
+  <link rel="stylesheet" href="style.css?v=2026-11-13a" />
+  <link rel="stylesheet" href="navidad.css?v=2026-11-13a" />
 
   <!-- ── Temática de temporada ──
        Halloween se activa solo del 1 de octubre al 2 de noviembre.
-       Para probar: ?tema=halloween  ·  para apagar: ?tema=normal -->
+       Navidad se activa solo del 13 de noviembre al 27 de diciembre.
+       Para probar: ?tema=halloween · ?tema=navidad · para apagar: ?tema=normal -->
   <script>
     (function () {
       var root = document.documentElement;
@@ -32,11 +34,26 @@
       var hoy = new Date(), mes = hoy.getMonth(), dia = hoy.getDate();
       var temporada = mes === 9 || (mes === 10 && dia <= 2);
 
-      if (tema === 'halloween' || (temporada && tema !== 'normal')) {
+      // Navidad: del 13 de noviembre al 27 de diciembre
+      var navidad = (mes === 10 && dia >= 13) || (mes === 11 && dia <= 27);
+
+      if (tema === 'halloween' || (temporada && !tema)) {
         root.classList.add('theme-halloween');
         try {
           if (localStorage.getItem('voystore:hw-banner:' + hoy.getFullYear()) === 'closed') {
             root.classList.add('hw-banner-closed');
+          }
+        } catch (e) {}
+      } else if (tema === 'navidad' || (navidad && !tema)) {
+        root.classList.add('theme-navidad');
+        try {
+          if (localStorage.getItem('voystore:xm-banner:' + hoy.getFullYear()) === 'closed') {
+            root.classList.add('xm-banner-closed');
+          }
+          // La puerta se muestra una vez por visita (?intro=1 para verla otra vez)
+          if (new URLSearchParams(location.search).get('intro') === '1' ||
+              sessionStorage.getItem('voystore:xm-intro') !== 'seen') {
+            root.classList.add('xm-intro-on');
           }
         } catch (e) {}
       }
@@ -44,6 +61,31 @@
   </script>
 </head>
 <body>
+
+  <!-- ── Intro navideña: puerta con el logo (solo en temporada, una vez por visita) ── -->
+  <div class="xm-intro xm-only" id="xmIntro" role="dialog" aria-label="Bienvenida navideña">
+    <div class="xm-intro-glow"></div>
+    <div class="xm-door xm-door-left"><span class="xm-knob"></span></div>
+    <div class="xm-door xm-door-right"><span class="xm-knob"></span></div>
+    <div class="xm-intro-center">
+      <svg class="xm-wreath" viewBox="0 0 200 200" aria-hidden="true">
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#0c3a20" stroke-width="30"/>
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#1d6b3c" stroke-width="22" stroke-dasharray="7 6"/>
+        <circle cx="100" cy="100" r="87" fill="none" stroke="#2e8f50" stroke-width="8" stroke-dasharray="4 10"/>
+        <circle cx="100" cy="100" r="72" fill="none" stroke="#2e8f50" stroke-width="6" stroke-dasharray="3 12"/>
+        <circle cx="100" cy="100" r="80" fill="none" stroke="#f2c46d" stroke-width="4" stroke-dasharray="0.1 21" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="77" fill="none" stroke="#d7263d" stroke-width="7" stroke-dasharray="0.1 41" stroke-dashoffset="12" stroke-linecap="round"/>
+        <g transform="translate(100 178)">
+          <path d="M0 0 C-24 -18 -38 4 -22 11 C-12 15 -4 6 0 0Z" fill="#d7263d"/>
+          <path d="M0 0 C24 -18 38 4 22 11 C12 15 4 6 0 0Z" fill="#d7263d"/>
+          <path d="M-3 3 L-14 24 L-6 20 L1 4Z M3 3 L14 24 L6 20 L-1 4Z" fill="#a3182b"/>
+          <circle r="6" fill="#a3182b"/>
+        </g>
+      </svg>
+      <img src="img/fondoblancosinfondo.png" alt="VOY STORE" class="xm-intro-logo">
+    </div>
+    <button type="button" class="xm-intro-skip">Saltar</button>
+  </div>
 
   <!-- ── Figuras de Halloween (se reutilizan con <use>) ── -->
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -94,6 +136,17 @@
       <a href="#precios">Ver precios →</a>
     </span>
     <button type="button" class="hw-banner-close" id="hwBannerClose" aria-label="Cerrar aviso">×</button>
+  </div>
+
+  <!-- ── Banner de Navidad (solo en temporada) ── -->
+  <div class="hw-banner xm-banner xm-only" id="xmBanner" role="region" aria-label="Temporada navideña">
+    <span class="hw-banner-text">
+      <strong>Navidad en VOY STORE</strong>
+      <span class="hw-long">· Regala entretenimiento esta temporada</span>
+      · <span data-xm-countdown-short></span>
+      <a href="#precios">Ver precios →</a>
+    </span>
+    <button type="button" class="hw-banner-close" id="xmBannerClose" aria-label="Cerrar aviso">×</button>
   </div>
 
 
@@ -154,9 +207,13 @@
       <span class="hw-spider-body">🕷️</span>
     </div>
 
+    <!-- Navidad: palabra gigante de fondo + hilo de luces -->
+    <div class="xm-bigword xm-only" aria-hidden="true">NAVIDAD</div>
+    <div class="xm-lights xm-only" aria-hidden="true"></div>
+
     <div class="hero-pill" id="heroPill">
       <span class="dot"></span>
-      <span data-hw="Edición Halloween · Honduras" data-hw-icon>Entretenimiento Premium · Honduras</span>
+      <span data-hw="Edición Halloween · Honduras" data-hw-icon data-xm="Edición Navidad · Honduras">Entretenimiento Premium · Honduras</span>
     </div>
 
     <div class="hero-title" id="heroTitle">
@@ -179,6 +236,12 @@
         </svg>
         WhatsApp
       </a>
+    </div>
+
+    <!-- Cuenta regresiva a Navidad -->
+    <div class="xm-countdown xm-only" data-xm-countdown>
+      <span class="xm-countdown-num"></span>
+      <span class="xm-countdown-text"></span>
     </div>
 
     <!-- Ticker infinito de plataformas -->
@@ -233,6 +296,9 @@
       <span class="stat-label">% Estabilidad</span>
     </div>
   </div>
+
+  <!-- Franja de íconos navideños -->
+  <div class="xm-pattern xm-only" aria-hidden="true"></div>
 
 
   <!-- ════════════════════════════════════
@@ -298,7 +364,7 @@
         <div class="phone-screen">
           <div class="phone-toast" id="phoneToast" aria-hidden="true">
             <span class="phone-toast-icon">✓</span>
-            <span class="phone-toast-text"><strong id="phoneToastName">Netflix</strong> activado<br><small data-hw="Listo para tu maratón de terror 🦇">Acceso enviado por WhatsApp</small></span>
+            <span class="phone-toast-text"><strong id="phoneToastName">Netflix</strong> activado<br><small data-hw="Listo para tu maratón de terror 🦇" data-xm="Listo para tus pelis navideñas 🎄">Acceso enviado por WhatsApp</small></span>
           </div>
           <div class="phone-header">
             <span class="phone-logo-small">VOY STORE</span>
@@ -478,7 +544,7 @@
         <a href="https://wa.me/50495437730?text=Hola!%20Quiero%20comprar%20Netflix" target="_blank" rel="noopener" class="p-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:inline; margin-right:6px; vertical-align:middle;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg> Comprar Netflix</a>
       </div>
       <div class="p-card featured" id="plan-disney">
-        <span class="p-badge" data-hw="Destacado" data-hw-icon>Destacado</span>
+        <span class="p-badge" data-hw="Destacado" data-hw-icon data-xm="El regalo perfecto">Destacado</span>
         <div class="p-card-head"><img src="img/disney-plusblanco.png" alt="Disney+" class="p-icon"><h3>Disney+</h3></div>
         <div class="p-row"><span>1 Perfil</span><strong>L. 120</strong></div>
         <div class="p-row"><span>2 Perfiles</span><strong>L. 225</strong></div>
@@ -539,7 +605,7 @@
 
     <div class="combo promo-strip reveal" id="combo">
       <img src="img/calabaza-sm.png" alt="" class="hw-pumpkin hw-combo-pumpkin hw-only" aria-hidden="true">
-      <h4 data-hw="Arma tu combo del terror" data-hw-icon>🧩 Arma tu combo y ahorra</h4>
+      <h4 data-hw="Arma tu combo del terror" data-hw-icon data-xm="🎁 Arma tu combo navideño">🧩 Arma tu combo y ahorra</h4>
       <p class="combo-sub">Elige tus plataformas (1 perfil c/u). El descuento por múltiples perfiles se aplica solo.</p>
 
       <div class="combo-chips" id="comboChips">
@@ -614,6 +680,35 @@
   <section id="contacto">
     <div class="contact-bg-img"></div>
 
+    <!-- Montañas nevadas en línea (Navidad) -->
+    <svg class="xm-mountains xm-only" viewBox="0 0 1000 300" aria-hidden="true">
+      <circle class="xm-star-glow" cx="500" cy="50" r="24" fill="#fff" opacity=".12"/>
+      <circle cx="500" cy="50" r="12" fill="#fff" opacity=".35"/>
+      <g stroke="#fff" stroke-width="1.6" stroke-linecap="round">
+        <path d="M500 40v20M490 50h20M493 43l14 14M507 43l-14 14"/>
+      </g>
+      <g fill="#fff">
+        <circle cx="430" cy="40" r="1.6"/><circle cx="570" cy="30" r="1.4"/><circle cx="610" cy="70" r="1.8"/>
+        <circle cx="390" cy="80" r="1.4"/><circle cx="455" cy="15" r="1.2"/><circle cx="540" cy="90" r="1.2"/>
+        <circle cx="660" cy="40" r="1.2"/><circle cx="350" cy="35" r="1.6"/>
+      </g>
+      <g fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round">
+        <path d="M150 262 L330 110 L470 262"/>
+        <path d="M300 262 L500 66 L700 262"/>
+        <path d="M560 262 L720 130 L880 262"/>
+        <path d="M60 262 h70 a20 20 0 0 1 38 -10 a14 14 0 0 1 26 2 h60"/>
+        <path d="M100 276 h200"/>
+        <path d="M700 262 h50 a18 18 0 0 1 34 -8 a22 22 0 0 1 40 2 h90"/>
+        <path d="M740 276 h190"/>
+        <path d="M380 276 a16 16 0 0 1 30 -6 a12 12 0 0 1 22 0 h120 a14 14 0 0 1 26 -4 a16 16 0 0 1 30 4"/>
+      </g>
+      <g fill="#fff">
+        <path d="M330 110 L298 137 L314 131 L326 142 L340 129 L360 136 Z"/>
+        <path d="M500 66 L463 102 L484 95 L500 108 L517 93 L538 102 Z"/>
+        <path d="M720 130 L683 160 L703 154 L720 168 L739 152 L758 160 Z"/>
+      </g>
+    </svg>
+
     <div class="hw-contact-deco hw-only" aria-hidden="true">
       <svg class="hw-candy"><use href="#hw-candy"/></svg>
       <img src="img/calabaza-sm.png" alt="" class="hw-pumpkin">
@@ -657,6 +752,9 @@
     </a>
   </section>
 
+  <!-- Franja de íconos navideños -->
+  <div class="xm-pattern xm-only" aria-hidden="true"></div>
+
 
   <!-- ════════════════════════════════════
        FOOTER
@@ -689,7 +787,8 @@
   </a>
 
   <!-- ── Script principal (siempre al final del body) ── -->
-  <script src="main.js?v=2026-10-04b"></script>
+  <script src="navidad.js?v=2026-11-13a"></script>
+  <script src="main.js?v=2026-11-13a"></script>
 
 </body>
 </html>

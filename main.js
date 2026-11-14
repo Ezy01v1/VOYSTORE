@@ -27,6 +27,7 @@ const hasFinePointer       = window.matchMedia('(hover: hover) and (pointer: fin
 
 // Temática de temporada (la decide el script del <head>)
 const isHalloween = document.documentElement.classList.contains('theme-halloween');
+const isNavidad   = document.documentElement.classList.contains('theme-navidad');
 
 
 /* ──────────────────────────────────────────
@@ -92,6 +93,20 @@ const isHalloween = document.documentElement.classList.contains('theme-halloween
   const BAT_COUNT = isHalloween ? (window.innerWidth < 680 ? 5 : 10) : 0;
 
   function createParticle() {
+    // Navidad: copos de nieve blancos que caen y se mecen
+    if (isNavidad) {
+      return {
+        x:     Math.random() * W,
+        y:     Math.random() * H,
+        r:     Math.random() * 2.2 + 0.8,
+        dx:    0,
+        dy:    Math.random() * 0.6 + 0.35,
+        sway:  Math.random() * Math.PI * 2,
+        alpha: Math.random() * 0.5 + 0.35,
+        snow:  true,
+        gold:  Math.random() < 0.12,
+      };
+    }
     return {
       x:      Math.random() * W,
       y:      Math.random() * H,
@@ -120,9 +135,11 @@ const isHalloween = document.documentElement.classList.contains('theme-halloween
   function paint(p) {
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = p.orange
-      ? `rgba(255, 138, 31, ${p.alpha})`
-      : `rgba(29, 185, 84, ${p.alpha})`;
+    ctx.fillStyle = p.snow
+      ? (p.gold ? `rgba(242, 196, 109, ${p.alpha})` : `rgba(251, 247, 239, ${p.alpha})`)
+      : p.orange
+        ? `rgba(255, 138, 31, ${p.alpha})`
+        : `rgba(29, 185, 84, ${p.alpha})`;
     ctx.fill();
   }
 
@@ -164,6 +181,21 @@ const isHalloween = document.documentElement.classList.contains('theme-halloween
     ctx.clearRect(0, 0, W, H);
 
     particles.forEach((p, i) => {
+      if (p.snow) {
+        p.sway += 0.012;
+        p.x += Math.sin(p.sway) * 0.35;
+        p.y += p.dy;
+
+        // Reiniciar arriba si sale por abajo
+        if (p.y > H + 5) {
+          particles[i]   = createParticle();
+          particles[i].y = -5;
+          return;
+        }
+        paint(p);
+        return;
+      }
+
       p.x += p.dx;
       p.y += p.dy;
 
@@ -335,7 +367,12 @@ const isHalloween = document.documentElement.classList.contains('theme-halloween
   const m = prefersReducedMotion ? 0 : 1;
 
   /* ── 4. Entrada del Hero ── */
-  const heroTimeline = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  // Si está la puerta navideña, el hero entra cuando se abre
+  const waitIntro = document.documentElement.classList.contains('xm-intro-on');
+  const heroTimeline = gsap.timeline({ paused: waitIntro, defaults: { ease: 'power3.out' } });
+  if (waitIntro) {
+    document.addEventListener('vs:intro-open', () => heroTimeline.play(), { once: true });
+  }
 
   heroTimeline
     .fromTo('#heroPill',   { y: 16 * m }, { opacity: 1, y: 0, duration: 0.8 }, 0.1)
