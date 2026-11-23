@@ -674,15 +674,15 @@ html.xm-intro-on body { overflow: hidden; }
 }
 
 /* Segunda pasada: la Navidad acompaña el recorrido completo. */
-.xm-sleigh-flight { left: 0; right: auto; animation-duration: 15s; }
+.xm-sleigh-flight { left: 0; right: auto; width: clamp(300px, 40vw, 520px); animation: xmSleighCross 9s linear -2.6s infinite; }
 @keyframes xmSleighCross {
   0% { transform: translateX(100vw) translateY(12px) scale(.83); opacity: 0; }
   9% { opacity: 1; }
   91% { opacity: 1; }
   100% { transform: translateX(-100%) translateY(-25px) scale(1); opacity: 0; }
 }
-.xm-bulb.xm-light--steady { animation: xmWarmPulse 5.2s ease-in-out infinite; }
-.xm-bulb.xm-light--twinkle { animation: xmFaintBlink var(--blink-time, 3.4s) ease-in-out infinite; }
+.xm-bulb.xm-light--steady { animation: xmWarmPulse 5.2s ease-in-out var(--phase, 0s) infinite; }
+.xm-bulb.xm-light--twinkle { animation: xmFaintBlink var(--blink-time, 3.4s) ease-in-out var(--phase, 0s) infinite; }
 @keyframes xmWarmPulse {
   0%, 100% { opacity: .95; filter: brightness(1.05); }
   50% { opacity: 1; filter: brightness(1.25); }
@@ -745,7 +745,7 @@ html.xm-intro-on body { overflow: hidden; }
 
 /* Franjas de figuras: un carrusel continuo en cada transición. */
 .xm-pattern { box-shadow: 0 12px 40px rgba(0,0,0,.25); }
-.xm-pattern-track { animation: ticker 25s linear infinite; }
+.xm-pattern-track { animation: ticker 12s linear infinite; }
 .xm-pattern-reverse .xm-pattern-track { animation-direction: reverse; }
 .xm-pattern:hover .xm-pattern-track { animation-play-state: paused; }
 
@@ -813,7 +813,7 @@ html.xm-intro-on body { overflow: hidden; }
 .theme-navidad .xm-bow { top: 2px; right: 73px; width: 42px; }
 
 @media (max-width: 680px) {
-  .xm-sleigh-flight { left: 0; right: auto; }
+  .xm-sleigh-flight { left: 0; right: auto; width: 250px; }
   .theme-navidad #app-mockup::before,
   .theme-navidad #plataformas::before,
   .theme-navidad #precios::before,
@@ -822,15 +822,17 @@ html.xm-intro-on body { overflow: hidden; }
   .theme-navidad #plataformas::after,
   .theme-navidad #precios::after,
   .theme-navidad #agentes::after { width: 105px; height: 80px; right: -10px; top: 42px; }
-  .xm-pattern-track { animation-duration: 19s; }
+  .xm-pattern-track { animation-duration: 11s; }
   .theme-navidad .pricing-grid { grid-template-columns: 1fr; }
 }
 @media (min-width: 681px) and (max-width: 900px) {
   .theme-navidad .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .xm-sleigh-flight { transform: translateX(48vw) translateY(-20px); opacity: 1; animation: none !important; }
-  .xm-bulb.xm-light--steady,
-  .xm-bulb.xm-light--twinkle,
-  .xm-pattern-track { animation: none !important; }
+  /* El usuario pidió expresamente estos tres movimientos de Navidad. */
+  html.theme-navidad .xm-sleigh-flight { animation: xmSleighCross 9s linear -2.6s infinite !important; }
+  html.theme-navidad .xm-bulb.xm-light--steady { animation: xmWarmPulse 5.2s ease-in-out var(--phase, 0s) infinite !important; }
+  html.theme-navidad .xm-bulb.xm-light--twinkle { animation: xmFaintBlink var(--blink-time, 3.4s) ease-in-out var(--phase, 0s) infinite !important; }
+  html.theme-navidad .xm-pattern-track { animation: ticker 12s linear infinite !important; }
+  html.theme-navidad .xm-pattern-reverse .xm-pattern-track { animation-direction: reverse !important; }
 }

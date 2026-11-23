@@ -214,7 +214,7 @@
         b.style.left = (x / W * 100) + '%';
         b.style.top = (y / H * 100) + '%';
         b.style.setProperty('--c', colors[k % colors.length]);
-        b.style.animationDelay = -((k * 0.57) % 3.7).toFixed(2) + 's';
+        b.style.setProperty('--phase', -((k * 0.57) % 3.7).toFixed(2) + 's');
         b.style.setProperty('--blink-time', (2.8 + (k % 5) * 0.63).toFixed(2) + 's');
         box.appendChild(b);
         k++;
