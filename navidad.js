@@ -3,7 +3,7 @@
    Temática de Navidad. Solo corre si el <head> puso la clase
    .theme-navidad en <html>. Se carga ANTES de main.js.
 
-   1. Intro: Santa llega desde la luna
+   1. Intro: logo de VOY STORE
    2. Textos de temporada (data-xm)
    3. Banner superior (se puede cerrar)
    4. Cuenta regresiva a Navidad
@@ -31,7 +31,7 @@
   };
 
 
-  /* ── 1. INTRO: LLEGADA DE SANTA ── */
+  /* ── 1. INTRO: LOGO DE VOY STORE ── */
   (function intro() {
     const el = document.getElementById('xmIntro');
     if (!el) return;
@@ -41,7 +41,7 @@
       return;
     }
 
-    try { sessionStorage.setItem('voystore:xm-intro-2', 'seen'); } catch (e) {}
+    try { sessionStorage.setItem('voystore:xm-intro-3', 'seen'); } catch (e) {}
 
     let done = false;
     const timers = [];
@@ -71,8 +71,8 @@
       }
     });
 
-    // El trineo crece desde la luna, pasa cerca del visitante y revela VOY STORE.
-    later(() => leave(false), 3900);
+    // El logo aparece antes de revelar la página.
+    later(() => leave(false), 1900);
   })();
 
 
