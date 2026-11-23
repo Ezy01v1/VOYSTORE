@@ -3,7 +3,7 @@
    Temática de Navidad. Solo corre si el <head> puso la clase
    .theme-navidad en <html>. Se carga ANTES de main.js.
 
-   1. Intro: puerta navideña con el logo
+   1. Intro: Santa llega desde la luna
    2. Textos de temporada (data-xm)
    3. Banner superior (se puede cerrar)
    4. Cuenta regresiva a Navidad
@@ -19,7 +19,6 @@
   const root = document.documentElement;
   if (!root.classList.contains('theme-navidad')) return;
 
-  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const NS = 'http://www.w3.org/2000/svg';
 
   const C = {
@@ -32,7 +31,7 @@
   };
 
 
-  /* ── 1. INTRO: PUERTA NAVIDEÑA ── */
+  /* ── 1. INTRO: LLEGADA DE SANTA ── */
   (function intro() {
     const el = document.getElementById('xmIntro');
     if (!el) return;
@@ -42,7 +41,7 @@
       return;
     }
 
-    try { sessionStorage.setItem('voystore:xm-intro', 'seen'); } catch (e) {}
+    try { sessionStorage.setItem('voystore:xm-intro-2', 'seen'); } catch (e) {}
 
     let done = false;
     const timers = [];
@@ -65,23 +64,15 @@
 
     const skip = el.querySelector('.xm-intro-skip');
     if (skip) skip.addEventListener('click', () => leave(true));
-    el.addEventListener('click', (e) => { if (e.target !== skip) leave(true); });
     document.addEventListener('keydown', function onKey(e) {
-      if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') {
+      if (e.key === 'Escape') {
         document.removeEventListener('keydown', onKey);
         leave(true);
       }
     });
 
-    if (reduced) {
-      later(() => leave(false), 900);
-      return;
-    }
-
-    // 0–0.7s entra la corona · 1.3s se abren las puertas · 2.1s se desvanece
-    later(() => el.classList.add('is-opening'), 1300);
-    later(announce, 1700);
-    later(() => leave(false), 2200);
+    // El trineo crece desde la luna, pasa cerca del visitante y revela VOY STORE.
+    later(() => leave(false), 3900);
   })();
 
 
