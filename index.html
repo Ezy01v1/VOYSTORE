@@ -20,8 +20,8 @@
   <!-- ── Estilos propios ──
        Al cambiar style.css o main.js, actualiza el ?v= (aquí y abajo)
        para que los navegadores no usen la versión en caché. -->
-  <link rel="stylesheet" href="style.css?v=2026-11-23a" />
-  <link rel="stylesheet" href="navidad.css?v=2026-11-23a" />
+  <link rel="stylesheet" href="style.css?v=2026-11-23c" />
+  <link rel="stylesheet" href="navidad.css?v=2026-11-23c" />
 
   <!-- ── Temática de temporada ──
        Halloween se activa solo del 1 de octubre al 2 de noviembre.
@@ -117,6 +117,21 @@
         <circle cx="24" cy="12" r="9" fill="var(--candy-body, #ff8a1f)"/>
         <path d="M19 5.5 L27 19.5 M23.5 3.2 L31 16.5" stroke="#fff3c4" stroke-width="2" stroke-linecap="round" opacity=".75"/>
       </symbol>
+    </defs>
+  </svg>
+
+  <!-- Iconos de línea propios, compartidos por la demo y las secciones -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="vs-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1z"/></symbol>
+      <symbol id="vs-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></symbol>
+      <symbol id="vs-tag" viewBox="0 0 24 24"><path d="M3 4h9l9 9-8 8-10-10z"/><circle cx="8" cy="8" r="1"/></symbol>
+      <symbol id="vs-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></symbol>
+      <symbol id="vs-shield" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 3 8 8 11 5-3 8-6 8-11V5z"/><path d="m8 12 3 3 5-6"/></symbol>
+      <symbol id="vs-chat" viewBox="0 0 24 24"><path d="M4 4h16v12H9l-5 4z"/><path d="M8 9h8M8 13h5"/></symbol>
+      <symbol id="vs-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-5 5-5 13 0 18M12 3c5 5 5 13 0 18"/></symbol>
+      <symbol id="vs-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l4 2"/></symbol>
+      <symbol id="vs-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></symbol>
     </defs>
   </svg>
 
@@ -441,10 +456,10 @@
             </div>
           </div>
           <div class="phone-bottom-nav">
-            <div class="phone-nav-icon active">🏠<div class="phone-nav-dot"></div></div>
-            <div class="phone-nav-icon">🔍</div>
-            <div class="phone-nav-icon">💰</div>
-            <div class="phone-nav-icon">👤</div>
+            <div class="phone-nav-icon active"><svg class="vs-icon"><use href="#vs-home"/></svg><div class="phone-nav-dot"></div></div>
+            <div class="phone-nav-icon"><svg class="vs-icon"><use href="#vs-search"/></svg></div>
+            <div class="phone-nav-icon"><svg class="vs-icon"><use href="#vs-tag"/></svg></div>
+            <div class="phone-nav-icon"><svg class="vs-icon"><use href="#vs-user"/></svg></div>
           </div>
         </div>
       </div>
@@ -459,28 +474,28 @@
       </p>
       <div class="mockup-features">
         <div class="mf-item">
-          <div class="mf-icon">✅</div>
+          <div class="mf-icon"><svg class="vs-icon"><use href="#vs-shield"/></svg></div>
           <div class="mf-text">
             <h4>Cuentas 100% estables</h4>
             <p>Garantizamos continuidad en tu servicio sin interrupciones inesperadas.</p>
           </div>
         </div>
         <div class="mf-item">
-          <div class="mf-icon">💬</div>
+          <div class="mf-icon"><svg class="vs-icon"><use href="#vs-chat"/></svg></div>
           <div class="mf-text">
             <h4>Atención por WhatsApp</h4>
             <p>Respuesta rápida y personalizada en todo momento.</p>
           </div>
         </div>
         <div class="mf-item">
-          <div class="mf-icon">💸</div>
+          <div class="mf-icon"><svg class="vs-icon"><use href="#vs-tag"/></svg></div>
           <div class="mf-text">
             <h4>Precios competitivos</h4>
             <p>Opciones por perfil o cuenta completa. Siempre al mejor precio.</p>
           </div>
         </div>
         <div class="mf-item">
-          <div class="mf-icon">🌍</div>
+          <div class="mf-icon"><svg class="vs-icon"><use href="#vs-globe"/></svg></div>
           <div class="mf-text">
             <h4>Disponible desde el extranjero</h4>
             <p>Adquiere tu cuenta aunque estés fuera de Honduras.</p>
@@ -500,6 +515,7 @@
     <p class="s-body reveal" style="text-align:center;margin:0 auto;">
       Elige la plataforma que más disfrutas y contáctanos para activarla en minutos.
     </p>
+    <p class="plat-interaction-hint"><span class="hint-desktop">Pasa el cursor por una tarjeta para descubrirla · Haz clic para ver precios</span><span class="hint-mobile">Toca una tarjeta para descubrirla · Toca de nuevo para ver precios</span></p>
 
     <div class="plat-img-grid">
       <div class="plat-tile plat-tile-wide" data-plan="netflix" role="button" tabindex="0" aria-label="Ver precios de Netflix">
@@ -549,6 +565,9 @@
       <span class="plat-mini">+ más</span>
     </div>
   </section>
+
+  <!-- Carrusel navideño continuo entre catálogo y precios -->
+  <div class="xm-pattern xm-only" aria-hidden="true"></div>
 
 
   <!-- ════════════════════════════════════
@@ -695,7 +714,7 @@
       <p>Escríbenos ahora, cuéntanos sobre ti y te explicamos cómo funciona el programa de agentes.</p>
       <a href="https://wa.me/50495437730?text=Hola!%20Me%20interesa%20ser%20agente%20de%20ventas%20de%20VOY%20STORE."
          class="btn-vivid" target="_blank" rel="noopener">
-        💬 Quiero ser agente
+        <svg class="vs-icon" aria-hidden="true"><use href="#vs-chat"/></svg> Quiero ser agente
       </a>
     </div>
   </section>
@@ -759,12 +778,12 @@
         <a href="https://wa.me/50495437730" target="_blank" rel="noopener">9543-7730</a>
       </div>
       <div class="c-card">
-        <div class="ci">🕐</div>
+        <div class="ci"><svg class="vs-icon"><use href="#vs-clock"/></svg></div>
         <h4>Horario</h4>
         <span>Lun–Dom 9am – 8pm</span>
       </div>
       <div class="c-card">
-        <div class="ci">📍</div>
+        <div class="ci"><svg class="vs-icon"><use href="#vs-pin"/></svg></div>
         <h4>Cobertura</h4>
         <span>Honduras · Internacional</span>
       </div>
@@ -814,8 +833,8 @@
   </a>
 
   <!-- ── Script principal (siempre al final del body) ── -->
-  <script src="navidad.js?v=2026-11-13a"></script>
-  <script src="main.js?v=2026-11-13a"></script>
+  <script src="navidad.js?v=2026-11-23c"></script>
+  <script src="main.js?v=2026-11-23c"></script>
 
 </body>
 </html>

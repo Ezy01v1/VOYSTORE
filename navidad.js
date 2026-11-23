@@ -210,11 +210,12 @@
         const x = (i + t) * w;
         const y = (1 - t) * (1 - t) * 4 + 2 * t * (1 - t) * 40 + t * t * 4;
         const b = document.createElement('span');
-        b.className = 'xm-bulb xm-light';
+        b.className = 'xm-bulb xm-light ' + (k % 4 === 0 ? 'xm-light--steady' : 'xm-light--twinkle');
         b.style.left = (x / W * 100) + '%';
         b.style.top = (y / H * 100) + '%';
         b.style.setProperty('--c', colors[k % colors.length]);
-        b.style.animationDelay = (k % 3) * 0.5 + 's';
+        b.style.animationDelay = -((k * 0.57) % 3.7).toFixed(2) + 's';
+        b.style.setProperty('--blink-time', (2.8 + (k % 5) * 0.63).toFixed(2) + 's');
         box.appendChild(b);
         k++;
       });
@@ -288,6 +289,7 @@
     strips.forEach((strip, s) => {
       // Cada franja empieza en un ícono distinto
       const order = tiles.slice(s * 5).concat(tiles.slice(0, s * 5));
+      strip.classList.toggle('xm-pattern-reverse', s % 2 === 1);
       const html = order.map((svg) => `<div class="xm-tile">${svg}</div>`).join('');
       const track = document.createElement('div');
       track.className = 'xm-pattern-track';
@@ -313,4 +315,17 @@
       <circle cx="35" cy="15" r="5" fill="#a3182b"/>`;
     card.appendChild(svg);
   })();
+
+  /* Tarjetas de precio con hojas de acebo y sello dibujados aquí. */
+  document.querySelectorAll('.pricing-grid > .p-card').forEach((card, index) => {
+    const holly = document.createElementNS(NS, 'svg');
+    holly.setAttribute('class', 'xm-card-holly');
+    holly.setAttribute('viewBox', '0 0 90 55');
+    holly.setAttribute('aria-hidden', 'true');
+    holly.innerHTML = `<path d="M40 31C20 29 14 16 8 7c8 1 10-2 16-5 4 7 11 11 24 20M44 30C54 13 68 10 80 8c-2 8 1 11 4 17-12 1-22 4-33 13" fill="#235039" stroke="#123a28" stroke-width="2"/><path d="M13 8 45 29 78 13" fill="none" stroke="#b8cb9d" stroke-width="2"/><circle cx="42" cy="33" r="6" fill="#ba2634"/><circle cx="53" cy="36" r="6" fill="#df3440"/><circle cx="47" cy="43" r="6" fill="#a8192b"/>`;
+    const postmark = document.createElement('span');
+    postmark.className = 'xm-postmark';
+    postmark.innerHTML = `VOY STORE<br><strong>${String(index + 1).padStart(2, '0')}</strong><br>HONDURAS`;
+    card.prepend(holly, postmark);
+  });
 })();

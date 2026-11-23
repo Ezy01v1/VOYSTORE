@@ -672,3 +672,165 @@ html.xm-intro-on body { overflow: hidden; }
   .xm-bulb { animation: none !important; }
   .xm-sleigh-flight { transform: translateX(-28%) translateY(-24px); opacity: 1; }
 }
+
+/* Segunda pasada: la Navidad acompaña el recorrido completo. */
+.xm-sleigh-flight { left: 0; right: auto; animation-duration: 15s; }
+@keyframes xmSleighCross {
+  0% { transform: translateX(100vw) translateY(12px) scale(.83); opacity: 0; }
+  9% { opacity: 1; }
+  91% { opacity: 1; }
+  100% { transform: translateX(-100%) translateY(-25px) scale(1); opacity: 0; }
+}
+.xm-bulb.xm-light--steady { animation: xmWarmPulse 5.2s ease-in-out infinite; }
+.xm-bulb.xm-light--twinkle { animation: xmFaintBlink var(--blink-time, 3.4s) ease-in-out infinite; }
+@keyframes xmWarmPulse {
+  0%, 100% { opacity: .95; filter: brightness(1.05); }
+  50% { opacity: 1; filter: brightness(1.25); }
+}
+@keyframes xmFaintBlink {
+  0%, 100% { opacity: .94; filter: brightness(1.05); }
+  42% { opacity: .4; filter: brightness(.65); }
+  52% { opacity: .83; filter: brightness(1.15); }
+  57% { opacity: .51; filter: brightness(.75); }
+  64% { opacity: 1; filter: brightness(1.35); }
+}
+
+.theme-navidad #app-mockup,
+.theme-navidad #plataformas,
+.theme-navidad #precios,
+.theme-navidad #agentes {
+  background-image:
+    radial-gradient(circle at 3% 12%, rgba(242,196,109,.16) 0 2px, transparent 3px),
+    radial-gradient(circle at 93% 78%, rgba(242,196,109,.14) 0 2px, transparent 3px),
+    radial-gradient(ellipse at 85% 15%, rgba(120,75,24,.12), transparent 42%),
+    linear-gradient(165deg, #08271a, #04140d);
+}
+.theme-navidad #plataformas { background-color: #092719; }
+.theme-navidad #agentes { background-color: #071e15; }
+.theme-navidad #plataformas,
+.theme-navidad #precios,
+.theme-navidad #agentes { overflow: clip; }
+.theme-navidad #app-mockup::before,
+.theme-navidad #plataformas::before,
+.theme-navidad #precios::before,
+.theme-navidad #agentes::before {
+  content: '✧  ·  ✦  ·  ✧';
+  position: absolute;
+  top: 23px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(300px, 55%);
+  color: var(--xm-gold);
+  font-size: 17px;
+  letter-spacing: 22px;
+  text-align: center;
+  opacity: .6;
+  border-top: 1px solid rgba(242,196,109,.24);
+  pointer-events: none;
+}
+.theme-navidad #app-mockup::after,
+.theme-navidad #plataformas::after,
+.theme-navidad #precios::after,
+.theme-navidad #agentes::after {
+  content: '';
+  position: absolute;
+  top: 70px;
+  right: 0;
+  width: 190px;
+  height: 130px;
+  background: url('img/navidad-sprig.svg') center / contain no-repeat;
+  opacity: .62;
+  pointer-events: none;
+}
+
+/* Franjas de figuras: un carrusel continuo en cada transición. */
+.xm-pattern { box-shadow: 0 12px 40px rgba(0,0,0,.25); }
+.xm-pattern-track { animation: ticker 25s linear infinite; }
+.xm-pattern-reverse .xm-pattern-track { animation-direction: reverse; }
+.xm-pattern:hover .xm-pattern-track { animation-play-state: paused; }
+
+/* Precios como tarjetas postales, con papel marfil, acebo y sello. */
+.theme-navidad .pricing-grid > .p-card,
+.theme-navidad .pricing-grid > .p-card.featured {
+  padding: 78px 20px 24px;
+  border: 5px solid #e6d8b9;
+  border-radius: 5px;
+  background: linear-gradient(145deg, #f7eedc, #e9dcc3);
+  color: #153b2b;
+  -webkit-mask: none;
+  mask: none;
+  box-shadow: inset 0 0 0 2px #28543d, inset 0 0 0 9px #f7eedc, 0 17px 36px rgba(0,0,0,.28);
+}
+.theme-navidad .pricing-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.theme-navidad .pricing-grid > .p-card.featured { border-color: #f2c46d; }
+.theme-navidad .pricing-grid > .p-card:hover { transform: translateY(-6px); }
+.theme-navidad .p-card-head {
+  background: #153f2c;
+  padding: 12px 13px;
+  margin: 0 0 12px;
+  min-height: 60px;
+  border-radius: 4px;
+}
+.theme-navidad .p-card-head h3 { color: #fff9e9; }
+.theme-navidad .p-row { border-bottom-color: rgba(22,65,44,.18); }
+.theme-navidad .p-row span { color: #385f48; }
+.theme-navidad .p-row strong { color: #173e2b; }
+.theme-navidad .p-btn {
+  background: #bb2634;
+  color: #fff9e9;
+  border-radius: 4px;
+  box-shadow: 0 6px 14px rgba(97,20,27,.2);
+}
+.theme-navidad .p-btn:hover { background: #9b1c2b; box-shadow: 0 8px 20px rgba(97,20,27,.3); }
+.theme-navidad .p-badge {
+  top: 49px;
+  right: 17px;
+  left: auto;
+  padding: 3px 8px;
+  border-radius: 3px;
+  font-size: .52rem;
+  z-index: 2;
+}
+.xm-card-holly { position: absolute; top: 10px; left: 14px; width: 84px; height: 52px; }
+.xm-postmark {
+  position: absolute;
+  top: 9px;
+  right: 13px;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 1.5px solid rgba(43,83,60,.55);
+  border-radius: 50%;
+  transform: rotate(14deg);
+  font: 700 6px/1.1 'DM Sans', sans-serif;
+  letter-spacing: .1em;
+  text-align: center;
+  color: #41624c;
+}
+.xm-postmark strong { font-size: 18px; line-height: 1; }
+.theme-navidad .xm-bow { top: 2px; right: 73px; width: 42px; }
+
+@media (max-width: 680px) {
+  .xm-sleigh-flight { left: 0; right: auto; }
+  .theme-navidad #app-mockup::before,
+  .theme-navidad #plataformas::before,
+  .theme-navidad #precios::before,
+  .theme-navidad #agentes::before { top: 14px; }
+  .theme-navidad #app-mockup::after,
+  .theme-navidad #plataformas::after,
+  .theme-navidad #precios::after,
+  .theme-navidad #agentes::after { width: 105px; height: 80px; right: -10px; top: 42px; }
+  .xm-pattern-track { animation-duration: 19s; }
+  .theme-navidad .pricing-grid { grid-template-columns: 1fr; }
+}
+@media (min-width: 681px) and (max-width: 900px) {
+  .theme-navidad .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .xm-sleigh-flight { transform: translateX(48vw) translateY(-20px); opacity: 1; animation: none !important; }
+  .xm-bulb.xm-light--steady,
+  .xm-bulb.xm-light--twinkle,
+  .xm-pattern-track { animation: none !important; }
+}

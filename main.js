@@ -29,6 +29,89 @@ const hasFinePointer       = window.matchMedia('(hover: hover) and (pointer: fin
 const isHalloween = document.documentElement.classList.contains('theme-halloween');
 const isNavidad   = document.documentElement.classList.contains('theme-navidad');
 
+/* Tarjetas que giran: imagen de portada delante y vista editorial detrás.
+   Si se agrega data-video-src="media/...mp4", reproduce ese clip solo al estar visible. */
+(function initPlatformFlipCards() {
+  const summaries = {
+    netflix: ['Series y películas', 'Historias para tu próxima maratón'],
+    disney: ['Familia y aventuras', 'Un mundo de historias para compartir'],
+    spotify: ['Música y podcasts', 'La banda sonora de cada momento'],
+    hbo: ['Series y cine', 'Grandes historias en una pantalla'],
+    youtube: ['Videos y música', 'Disfruta tus favoritos sin interrupciones'],
+  };
+  const logos = {
+    netflix: 'img/netflix.png',
+    disney: 'img/disney-plusblanco.png',
+    spotify: 'img/spotify.png',
+    hbo: 'img/hbo.png',
+    youtube: 'img/youtube.png',
+  };
+
+  document.querySelectorAll('.plat-img-grid .plat-tile').forEach((tile) => {
+    const [category, headline] = summaries[tile.dataset.plan] || ['Entretenimiento', 'Descubre más'];
+    const photo = tile.querySelector('img');
+    const imageUrl = photo ? photo.getAttribute('src') : '';
+    const title = tile.querySelector('.plat-tile-name')?.textContent || '';
+    const front = document.createElement('div');
+    front.className = 'plat-face plat-face-front';
+    while (tile.firstChild) front.appendChild(tile.firstChild);
+
+    const back = document.createElement('div');
+    back.className = 'plat-face plat-face-back';
+    back.setAttribute('aria-hidden', 'true');
+    const art = document.createElement('div');
+    art.className = 'plat-recap-art';
+    art.style.backgroundImage = `url("${imageUrl.replace(/"/g, '%22')}")`;
+    back.appendChild(art);
+    const logo = document.createElement('img');
+    logo.className = 'plat-recap-logo';
+    logo.src = logos[tile.dataset.plan];
+    logo.alt = '';
+    back.appendChild(logo);
+    const copy = document.createElement('div');
+    copy.className = 'plat-recap-copy';
+    copy.innerHTML = `<span class="plat-recap-kicker">${category}</span><strong>${title}</strong><p>${headline}</p><span class="plat-recap-link">Ver planes y precios →</span>`;
+    back.appendChild(copy);
+
+    const rotator = document.createElement('div');
+    rotator.className = 'plat-flipper';
+    rotator.append(front, back);
+    tile.appendChild(rotator);
+
+    const videoSrc = tile.dataset.videoSrc;
+    if (videoSrc) {
+      const video = document.createElement('video');
+      video.src = videoSrc;
+      video.muted = true;
+      video.loop = true;
+      video.playsInline = true;
+      video.preload = 'none';
+      video.poster = imageUrl;
+      video.setAttribute('aria-hidden', 'true');
+      back.insertBefore(video, copy);
+      tile.addEventListener('mouseenter', () => video.play().catch(() => {}));
+      tile.addEventListener('mouseleave', () => { video.pause(); video.currentTime = 0; });
+    }
+
+    if (!hasFinePointer) {
+      tile.addEventListener('click', (event) => {
+        if (!tile.classList.contains('is-flipped')) {
+          event.stopImmediatePropagation();
+          document.querySelectorAll('.plat-tile.is-flipped').forEach((other) => other.classList.remove('is-flipped'));
+          tile.classList.add('is-flipped');
+        }
+      });
+    }
+    tile.addEventListener('keydown', (event) => {
+      if (event.key === ' ') {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        tile.classList.toggle('is-flipped');
+      }
+    });
+  });
+})();
+
 
 /* ──────────────────────────────────────────
    16. TEMPORADA: HALLOWEEN (textos + banner)

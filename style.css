@@ -2312,3 +2312,117 @@ html.theme-halloween:not(.hw-banner-closed) { --hw-offset: 36px; }
   border-color: rgba(176, 196, 186, 0.5);
 }
 
+/* Iconografía de línea consistente con la identidad de VOY STORE. */
+.vs-icon {
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  flex: none;
+}
+.mf-icon .vs-icon { color: var(--vivid); }
+.phone-nav-icon .vs-icon { width: 18px; height: 18px; }
+.ci .vs-icon { width: 34px; height: 34px; }
+.agents-cta-card .btn-vivid .vs-icon { width: 18px; height: 18px; vertical-align: middle; margin-right: 5px; }
+
+/* Reverso editorial de las cinco plataformas principales. */
+.plat-interaction-hint {
+  color: rgba(240,250,245,.7);
+  font-size: .78rem;
+  letter-spacing: .04em;
+  margin: 16px auto -35px;
+}
+.plat-interaction-hint .hint-mobile { display: none; }
+.plat-tile { perspective: 1000px; }
+.plat-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 780ms cubic-bezier(.2,.75,.2,1);
+}
+.plat-face {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.plat-face-back {
+  transform: rotateY(180deg);
+  background: #092015;
+  text-align: left;
+}
+.plat-recap-art,
+.plat-face-back video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background-size: cover;
+  background-position: center;
+  filter: saturate(.85);
+}
+.plat-face-back video { z-index: 1; }
+.plat-recap-art { animation: platRecapPan 7s ease-in-out infinite alternate; }
+@keyframes platRecapPan { to { transform: scale(1.28) translateX(-3%); } }
+.plat-face-back::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(90deg, rgba(2,16,10,.88), rgba(2,16,10,.48) 65%, rgba(2,16,10,.14));
+}
+.plat-recap-logo {
+  position: absolute;
+  z-index: 3;
+  right: 7%;
+  top: 50%;
+  width: 31%;
+  height: 40%;
+  object-fit: contain;
+  transform: translateY(-50%);
+  filter: drop-shadow(0 6px 16px rgba(0,0,0,.7));
+}
+.plat-tile:not(.plat-tile-wide) .plat-recap-logo { display: none; }
+.plat-recap-copy {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(16px, 2vw, 30px);
+  color: #fff;
+}
+.plat-recap-kicker {
+  font-size: .64rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #a8f0c4;
+}
+.plat-recap-copy strong { font: 800 clamp(1.1rem, 2vw, 1.9rem) 'Syne', sans-serif; margin: 5px 0; }
+.plat-recap-copy p { font-size: clamp(.68rem, 1vw, .9rem); line-height: 1.35; margin: 0; max-width: 24ch; }
+.plat-recap-link { font-size: .72rem; font-weight: 700; color: #f2c46d; margin-top: 12px; }
+@media (hover: hover) and (pointer: fine) {
+  .plat-tile:hover .plat-flipper { transform: rotateY(180deg); }
+}
+.plat-tile.is-flipped .plat-flipper,
+.plat-tile:focus-visible .plat-flipper { transform: rotateY(180deg); }
+@media (max-width: 680px) {
+  .plat-interaction-hint { margin-bottom: -35px; font-size: .72rem; }
+  .plat-interaction-hint .hint-desktop { display: none; }
+  .plat-interaction-hint .hint-mobile { display: inline; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .plat-flipper { transition-duration: 0ms; }
+  .plat-recap-art { animation: none; }
+}
+
