@@ -357,8 +357,14 @@ html.xm-intro-on body { overflow: hidden; }
   .xm-ornament,
   .xm-star-glow,
   .xm-pattern-track,
-  .xm-intro-brand {
+  .xm-intro-center {
     animation: none !important;
+  }
+  .xm-intro.is-opening .xm-door-left,
+  .xm-intro.is-opening .xm-door-right,
+  .xm-intro.is-opening .xm-intro-center,
+  .xm-intro.is-opening .xm-intro-glow {
+    animation: none;
   }
   .theme-navidad .pricing-grid > .p-card:hover { transform: none; }
 }
@@ -413,14 +419,39 @@ html.xm-intro-on body { overflow: hidden; }
 .theme-navidad .xm-bigword { display: none; }
 
 .xm-sky { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.xm-hero-logo {
+.xm-moon {
   position: absolute;
-  top: 24%;
-  right: 5%;
-  width: clamp(280px, 42vw, 540px);
-  height: auto;
-  opacity: .9;
-  filter: drop-shadow(0 18px 48px rgba(0, 0, 0, .55)) drop-shadow(0 0 38px rgba(242, 196, 109, .2));
+  width: clamp(270px, 35vw, 490px);
+  aspect-ratio: 1;
+  right: 9%;
+  top: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 31% 27%, #fff8dc 0 8%, #f7e9bd 40%, #b8b7aa 72%, #697f84 100%);
+  box-shadow: 0 0 0 14px rgba(240,230,187,.035), 0 0 95px 22px rgba(244,227,174,.2), 0 0 210px 60px rgba(215,231,210,.09);
+}
+.xm-moon::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: .22;
+  background: radial-gradient(circle at 63% 19%, #657d7d 0 8%, transparent 9%), radial-gradient(circle at 25% 50%, #657d7d 0 11%, transparent 12%), radial-gradient(circle at 58% 68%, #657d7d 0 12%, transparent 13%);
+}
+.xm-sleigh-flight {
+  position: absolute;
+  top: 36%;
+  right: 1%;
+  width: clamp(240px, 31vw, 430px);
+  color: #14242a;
+  filter: drop-shadow(0 3px 2px rgba(248,222,158,.42));
+  animation: xmSleighCross 19s linear infinite;
+}
+.xm-sleigh-flight svg { width: 100%; height: auto; display: block; }
+@keyframes xmSleighCross {
+  0% { transform: translateX(95%) translateY(9px) scale(.75); opacity: 0; }
+  13% { opacity: 1; }
+  74% { opacity: 1; }
+  100% { transform: translateX(-200%) translateY(-46px) scale(1.05); opacity: 0; }
 }
 .xm-ridge { position: absolute; left: -3%; bottom: 0; width: 106%; height: 28%; }
 .xm-ridge-back {
@@ -534,19 +565,34 @@ html.xm-intro-on body { overflow: hidden; }
 
 @media (max-width: 900px) {
   .theme-navidad #inicio { min-height: 760px; padding-top: calc(166px + var(--hw-offset)); }
-  .xm-hero-logo { right: -3%; width: 45vw; opacity: .7; }
+  .xm-moon { right: -6%; width: 42vw; opacity: .68; }
+  .xm-sleigh-flight { right: -5%; }
   .phone-scene { height: 620px; }
 }
 @media (max-width: 680px) {
   .theme-navidad #inicio { min-height: 760px; padding: calc(166px + var(--hw-offset)) 7% 88px; }
   .theme-navidad .hero-title { font-size: clamp(5.3rem, 22vw, 8rem); }
   .theme-navidad .hero-sub { max-width: 360px; margin-top: 22px; }
-  .xm-hero-logo { display: none; }
+  .xm-moon { top: 12%; right: -80px; width: 240px; opacity: .52; }
+  .xm-sleigh-flight { top: 22%; right: -50px; width: 220px; opacity: .72; }
   .xm-ridge { height: 19%; }
   .xm-lights { height: 42px; }
   .phone-scene { height: 620px; }
 }
+@media (prefers-reduced-motion: reduce) {
+  .xm-sleigh-flight,
+  .xm-bulb { animation: none !important; }
+  .xm-sleigh-flight { transform: translateX(-28%) translateY(-24px); opacity: 1; }
+}
+
 /* Segunda pasada: la Navidad acompaña el recorrido completo. */
+.xm-sleigh-flight { left: 0; right: auto; width: clamp(300px, 40vw, 520px); animation: xmSleighCross 9s linear -2.6s infinite; }
+@keyframes xmSleighCross {
+  0% { transform: translateX(100vw) translateY(12px) scale(.83); opacity: 0; }
+  9% { opacity: 1; }
+  91% { opacity: 1; }
+  100% { transform: translateX(-100%) translateY(-25px) scale(1); opacity: 0; }
+}
 .xm-bulb.xm-light--steady { animation: xmWarmPulse 5.2s ease-in-out var(--phase, 0s) infinite; }
 .xm-bulb.xm-light--twinkle { animation: xmFaintBlink var(--blink-time, 3.4s) ease-in-out var(--phase, 0s) infinite; }
 @keyframes xmWarmPulse {
@@ -681,6 +727,7 @@ html.xm-intro-on body { overflow: hidden; }
 .theme-navidad .xm-bow { top: 2px; right: 73px; width: 42px; }
 
 @media (max-width: 680px) {
+  .xm-sleigh-flight { left: 0; right: auto; width: 250px; }
   .theme-navidad #app-mockup::before,
   .theme-navidad #plataformas::before,
   .theme-navidad #precios::before,
@@ -696,7 +743,8 @@ html.xm-intro-on body { overflow: hidden; }
   .theme-navidad .pricing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  /* Las luces y el carrusel forman parte de la edición navideña. */
+  /* El usuario pidió expresamente estos tres movimientos de Navidad. */
+  html.theme-navidad .xm-sleigh-flight { animation: xmSleighCross 9s linear -2.6s infinite !important; }
   html.theme-navidad .xm-bulb.xm-light--steady { animation: xmWarmPulse 5.2s ease-in-out var(--phase, 0s) infinite !important; }
   html.theme-navidad .xm-bulb.xm-light--twinkle { animation: xmFaintBlink var(--blink-time, 3.4s) ease-in-out var(--phase, 0s) infinite !important; }
   html.theme-navidad .xm-pattern-track { animation: ticker 20s linear infinite !important; }
