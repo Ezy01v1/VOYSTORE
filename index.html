@@ -16,11 +16,12 @@
   <!-- ── GSAP (animaciones) ── -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.4.0/model-viewer.min.js"></script>
 
   <!-- ── Estilos propios ──
        Al cambiar style.css o main.js, actualiza el ?v= (aquí y abajo)
        para que los navegadores no usen la versión en caché. -->
-  <link rel="stylesheet" href="style.css?v=2026-11-23c" />
+  <link rel="stylesheet" href="style.css?v=2026-11-23d" />
   <link rel="stylesheet" href="navidad.css?v=2026-11-23g" />
 
   <!-- ── Temática de temporada ──
@@ -499,6 +500,24 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="brand-3d-showcase reveal" id="logo-3d">
+      <div class="brand-3d-copy">
+        <p class="s-tag">Una marca para explorar</p>
+        <h3>VOY STORE<br><span>en tres dimensiones</span></h3>
+        <p>Gira el emblema y descubre cada detalle.</p>
+        <span class="brand-3d-hint">Arrastra para girar · Desliza para continuar</span>
+      </div>
+      <model-viewer class="brand-3d-model"
+        src="models/voy-store-logo.glb"
+        alt="Emblema tridimensional de VOY STORE"
+        loading="lazy" reveal="auto"
+        camera-controls disable-zoom touch-action="pan-y"
+        camera-orbit="18deg 80deg auto" field-of-view="24deg"
+        interaction-prompt="none" environment-image="neutral"
+        tone-mapping="aces" exposure="1.3" shadow-intensity="0.6">
+        <img slot="poster" src="img/fondoblancosinfondo.png" alt="Logo de VOY STORE" loading="lazy">
+      </model-viewer>
     </div>
   </section>
 

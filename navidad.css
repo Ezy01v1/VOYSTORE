@@ -796,6 +796,8 @@ html.xm-intro-on body { overflow: hidden; }
 }
 .theme-navidad #plataformas { background-color: #092719; }
 .theme-navidad #agentes { background-color: #071e15; }
+.theme-navidad .brand-3d-showcase { border-color: rgba(242, 196, 109, .38); background: radial-gradient(ellipse at 70% 50%, rgba(196, 151, 65, .17), transparent 58%), linear-gradient(130deg, #0a261b, #061811); }
+.theme-navidad .brand-3d-copy h3 span { color: var(--xm-gold); }
 .theme-navidad #plataformas,
 .theme-navidad #precios,
 .theme-navidad #agentes { overflow: clip; }
