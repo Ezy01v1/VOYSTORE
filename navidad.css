@@ -745,7 +745,7 @@ html.xm-intro-on body { overflow: hidden; }
 
 /* Franjas de figuras: un carrusel continuo en cada transición. */
 .xm-pattern { box-shadow: 0 12px 40px rgba(0,0,0,.25); }
-.xm-pattern-track { animation: ticker 12s linear infinite; }
+.xm-pattern-track { animation: ticker 20s linear infinite; }
 .xm-pattern-reverse .xm-pattern-track { animation-direction: reverse; }
 .xm-pattern:hover .xm-pattern-track { animation-play-state: paused; }
 
@@ -822,7 +822,7 @@ html.xm-intro-on body { overflow: hidden; }
   .theme-navidad #plataformas::after,
   .theme-navidad #precios::after,
   .theme-navidad #agentes::after { width: 105px; height: 80px; right: -10px; top: 42px; }
-  .xm-pattern-track { animation-duration: 11s; }
+  .xm-pattern-track { animation-duration: 20s; }
   .theme-navidad .pricing-grid { grid-template-columns: 1fr; }
 }
 @media (min-width: 681px) and (max-width: 900px) {
@@ -833,6 +833,6 @@ html.xm-intro-on body { overflow: hidden; }
   html.theme-navidad .xm-sleigh-flight { animation: xmSleighCross 9s linear -2.6s infinite !important; }
   html.theme-navidad .xm-bulb.xm-light--steady { animation: xmWarmPulse 5.2s ease-in-out var(--phase, 0s) infinite !important; }
   html.theme-navidad .xm-bulb.xm-light--twinkle { animation: xmFaintBlink var(--blink-time, 3.4s) ease-in-out var(--phase, 0s) infinite !important; }
-  html.theme-navidad .xm-pattern-track { animation: ticker 12s linear infinite !important; }
+  html.theme-navidad .xm-pattern-track { animation: ticker 20s linear infinite !important; }
   html.theme-navidad .xm-pattern-reverse .xm-pattern-track { animation-direction: reverse !important; }
 }
